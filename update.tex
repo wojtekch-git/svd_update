@@ -1,0 +1,407 @@
+\documentclass[11pt,a4paper]{article}
+
+% \documentclass{article}
+% \usepackage{arxiv}
+
+\usepackage{authblk}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+%\usepackage{cleveref}       % smart cross-referencing
+%\usepackage{lipsum}         % Can be removed after putting your text content
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{doi}
+
+% Uncomment to override  the `A preprint' in the header
+% \renewcommand{\headeright}{}
+% \renewcommand{\undertitle}{}
+%\renewcommand{\shorttitle}{Integrated Hessian}
+
+%\documentclass[final,times,5p,7pt,twocolumn,sort&compress,fleqn]{elsarticle}
+%\usepackage[numbers]{natbib}
+
+\pretolerance=2000
+
+% to correct space before and after delimiters
+\usepackage{mleftright}
+\mleftright 
+
+%page geometry
+% \usepackage[colorlinks,linkcolor=IVAIteal,citecolor=IVAIpurple,urlcolor=IVAIpurple]{hyperref}
+ % \usepackage[lmargin=2cm,rmargin=2cm,tmargin=1.25cm,bmargin=1.25cm,includefoot,includehead]{geometry}
+
+%typography
+% \usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+%% Serif Times fonts
+%\renewcommand{\rmdefault}{ptm}
+
+\usepackage[xspace]{ellipsis}
+% \usepackage{pifont}% http://ctan.org/pkg/pifont
+% \newcommand{\cmark}{\ding{51}}%
+% \newcommand{\xmark}{\ding{55}}%
+
+% \usepackage{charter}
+
+\usepackage{inconsolata} % for tighter \tt (monospace fonts)
+
+\usepackage{xfrac}
+
+% \usepackage{titling}
+% \pretitle{\begin{center}\Large\fontfamily{phv}\fontseries{bf}\selectfont}
+% \posttitle{\end{center}}
+% \preauthor{\begin{center}\large}
+% \postauthor{\end{center}}
+% \predate{\begin{center}\footnotesize}
+% \postdate{\end{center}}
+% \setlength{\droptitle}{-1cm}
+
+
+%\usepackage{charter}
+
+%% Sans-serif Arial-like fonts (Helvetica)
+%\renewcommand{\sfdefault}{phv} 
+
+%text structures
+\usepackage{enumitem}
+\usepackage{tabu}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{eurosym}
+\usepackage{xspace}
+\usepackage{booktabs}
+
+\usepackage{relsize}
+
+\usepackage{subcaption}
+\captionsetup{font=footnotesize}
+
+\usepackage{float}
+%\usepackage[parfill]{parskip}
+%\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{tabulary}
+
+% \usepackage{mathrsfs}
+% \usepackage{mathtools}
+
+\usepackage{amsmath,amsthm}
+\interdisplaylinepenalty=2500
+
+\usepackage{amssymb}
+%\usepackage{bbm}
+\usepackage{bm}
+%\usepackage{upgreek}
+
+\usepackage{ifthen} % provides \ifthenelse test  
+\usepackage{xifthen}
+
+\usepackage[active]{srcltx}
+
+\usepackage{stmaryrd} % provides double brackets
+
+\usepackage{xspace}
+
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+\def\eg{{e.\,g}\onedot} \def\Eg{{E.g}\onedot}
+\def\ie{{i.\,e}\onedot} \def\Ie{{I.e}\onedot}
+\def\cf{{cf}\onedot} \def\Cf{{C.f}\onedot}
+\def\etc{{etc}\onedot}
+\def\vs{{vs}\onedot}
+\def\wrt{w.\,r.\,t\onedot}
+\def\dof{d.\,o.\,f\onedot}
+\def\etal{{et al}\onedot}
+\def\almoste{a.\,e\onedot}
+\makeatother
+
+% to stretch bmatrices, pmatrices, and the like
+% \makeatletter
+% \renewcommand*\env@matrix[1][\arraystretch]{%
+%   \edef\arraystretch{#1}%
+%   \hskip -\arraycolsep
+%   \let\@ifnextchar\new@ifnextchar
+%   \array{*\c@MaxMatrixCols c}}
+% \makeatother
+
+% \usepackage{array}
+% \renewcommand{\arraystretch}{1.5}
+
+%\usepackage{cmdtrack}
+%\usepackage{refcheck}
+
+% \newcommand*{\expect}{\mathsf{E}}
+% \newcommand*{\prob}{\mathsf{P}}
+% \newcommand{\IG}{\Xib_{\mathrm{IG}}}
+% \newcommand{\Psib}{\bm{\Uppsi}}
+% \newcommand{\Vm}{V^-}
+% \newcommand{\Vpm}{V^{\pm}}
+% \newcommand{\Vp}{V^+}
+% \newcommand{\Win}{\M{W}_{\textrm{in}}}
+% \newcommand{\Wout}{\M{W}_{\textrm{out}}}
+% \newcommand{\Xib}{\bm{\Upxi}}
+% \newcommand{\Zplus}{\mathbb{Z}_{\geqslant{0}}}
+% \newcommand{\agm}[5][f]{\tilde{\mu}^{(#1)}_{#2,#3;#4,#5}}
+% \newcommand{\gm}[5][f]{\mu^{(#1)}_{#2,#3;#4,#5}}
+% \newcommand{\lambdab}{\bm{\uplambda}}
+% \newcommand{\lambpm}{\lambda_{\pm}}
+% \newcommand{\pcr}{\tens{C}}
+% \newcommand{\phibt}{\tilde{\bm{\upphi}}}
+% \newcommand{\phib}{\bm{\upphi}}
+% \newcommand{\phit}{\tilde{\phi}}
+% \newcommand{\pro}[2][P]{\M{#1}_{#2}^\perp}
+% \newcommand{\psib}{\bm{\uppsi}}
+% \newcommand{\tde}{\tilde\de}
+% \newcommand{\truede}{\underline{\de}}
+% \newcommand{\truetde}{\underline{\tde}}
+%\newcommand{\IG}{{\bm{\upgamma}}}
+%\newcommand{\J}{\mathbf{J}}
+%\newcommand{\betabold}{\boldsymbol{\upbeta}}
+%\newcommand{\xib}{\bm{\xi}}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\0}{\M{0}}
+\newcommand{\IGs}{u}
+\newcommand{\IG}{\bm{\nabla}^{\mathrm{int}}}
+\newcommand{\IH}{\bm{\mathsf{D}\nabla}^{\mathrm{int}}}
+\newcommand{\M}[1]{\mathbf{#1}}
+\newcommand{\Mt}[1]{\tilde{\M{#1}}} 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\top}
+\newcommand{\comp}[2]{{\left\llbracket #1\right\rrbracket}_{#2}}
+\newcommand{\dderiv}[2]{\dfrac{\partial #1}{\partial #2}}
+\newcommand{\deq}{\mathrel{\stackrel{\scriptscriptstyle\Delta}{=}}}
+\newcommand{\deriv}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\der}[1]{\bm{\mathsf{D}}{#1}}
+\newcommand{\de}{\boldsymbol{\theta}}
+\newcommand{\emphbf}[1]{\emph{\textbf{#1}\xspace}}
+\newcommand{\entry}[3]{{\left\llbracket#1\right\rrbracket}_{#2 #3}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\grad}[1]{\bm{\nabla}{#1}}
+\newcommand{\hess}[1]{\bm{\mathsf{D}\nabla}{#1}}
+\newcommand{\sderiv}[2]{{\partial #1}/{\partial #2}}
+\newcommand{\ud}{\,\mathrm d}
+\newcommand{\ve}[1]{\mathbf{#1}}
+
+\newcommand{\derivtwo}[3]{%
+  \ifthenelse{\equal{#2}{#3}}
+  {\frac{\partial^2#1}{\partial #2^2}}
+  {\frac{\partial^2#1}{\partial #2 \partial #3}}
+}
+
+\newcommand{\dderivtwo}[3]{%
+  \ifthenelse{\equal{#2}{#3}}
+  {\dfrac{\partial^2#1}{\partial #2^2}}
+  {\dfrac{\partial^2#1}{\partial #2 \partial #3}}
+}
+
+% \newcommand{\dderivtwo}[3]{%
+%   \ifthenelse{\isempty{#3}}
+%   {\dfrac{\partial^2#1}{\partial #2^2}}
+%   {\dfrac{\partial^2#1}{\partial #2 \partial #3}}
+% }
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\sgn}{sgn}
+
+\usepackage[active]{srcltx}
+
+\usepackage{colonequals}
+
+
+% generating plots
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\setlist{nosep} 
+
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem*{theorem*}{Theorem}
+
+\newenvironment{changemargin}[2]{%
+  \begin{list}{}{%
+      \setlength{\topsep}{0pt}%
+      \setlength{\leftmargin}{#1}%
+      \setlength{\rightmargin}{#2}%
+      \setlength{\listparindent}{\parindent}%
+      \setlength{\itemindent}{\parindent}%
+      \setlength{\parsep}{\parskip}%
+    }%
+  \item[]}
+  {\end{list}}
+
+\newenvironment{keywords}{%
+  \begingroup
+  \def\and{\unskip\space\textperiodcentered\space\ignorespaces}
+  \begin{changemargin}{\leftmargin}{\leftmargin}
+    \small\noindent\emph{Keywords}:}
+  {\end{changemargin}
+  \endgroup
+}
+
+\begin{document}
+
+\title{A Note on the Incremental SVD}
+
+\date{}
+
+\author{}
+
+% \affil{%
+%   Insight Via Artificial Intelligence Pty Ltd \\ Suite 811, 147 Pirie Street \\ Adelaide, SA 5000}
+
+\maketitle
+
+% \begin{abstract}
+%   The mathematical formulation of the integrated Hessian method from machine learning involves a matrix whose entries contain integral expressions. Here we present a formula for the integrated Hessian matrix that uses single integrals over a line segment. This replaces the original expression for the same matrix that uses double integrals over a square domain.
+% \end{abstract}
+
+% \begin{keywords}
+%   integrated gradient \and integrated Hessian \and single integral \and double integral
+% \end{keywords}
+
+%\title{A Note on the Integrated Hessian}
+
+%\maketitle
+
+\section{}
+
+Let
+\begin{displaymath}
+  \M{X}_0 = \M{U}_0 \M{S}_0 \M{V}_0^\T.
+\end{displaymath}
+Then
+\begin{displaymath}
+  \M{X}_1 = [\M{U}_0, \ve{p}_1] \M{K}_1 [\M{V}_0, \ve{q}_1]^\T
+  = [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T [\M{V}_0, \ve{q}_1]^\T.
+ \end{displaymath}
+With
+\begin{displaymath}
+  \M{U}_1 =  [\M{U}_0, \ve{p}_1] \M{C}_1
+  \quad
+  \text{and}
+  \quad
+  \M{V}_1 = [\M{V}_0, \ve{q}_1] \M{D}_1,
+\end{displaymath}
+we have
+\begin{displaymath}
+  \M{X}_1 =   \M{U}_1 \M{S}_1 \M{V}_1^\T.
+\end{displaymath}
+Generally, for any $k \in \N$, 
+\begin{displaymath}
+  \M{X}_k = [\M{U}_{k-1}, \ve{p}_k] \M{K}_k [\M{V}_{k-1}, \ve{q}_k]^\T
+  = [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T [\M{V}_{k-1}, \ve{q}_k]^\T,
+\end{displaymath}
+and with
+\begin{displaymath}
+  \M{U}_k =  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k
+  \quad
+  \M{V}_k = [\M{V}_{k-1}, \ve{q}_k] \M{D}_k,
+\end{displaymath}
+we have
+\begin{displaymath}
+  \M{X}_k =  \M{U}_k \M{S}_k \M{V}_k^\T.
+\end{displaymath}
+Note that
+\begin{align*}
+  \M{U}_{k+1}
+  &
+    = [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+    =  [[\M{U}_{k-1}, \ve{p}_k] \M{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+  \\
+  &
+    =
+    \left[
+    [\M{U}_{k-1}, \ve{p}_k], \ve{p}_{k+1}
+    \right]
+    \begin{bmatrix}
+      \M{C}_k & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+              \M{C}_{k+1}.
+\end{align*}
+This equality inspires us to introduce, inductively, the following matrices:
+\begin{displaymath}
+  \Mt{U}_1 = [\M{U}_0, \ve{p}_1]
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_1 = \Mt{C}_1,
+\end{displaymath}
+and, for each positive integer $k$ greater than 1, 
+\begin{displaymath}
+  \Mt{U}_k = [\M{U}_0, \ve{p}_1, \dots \ve{p}_k]
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_k
+  =
+  \begin{bmatrix}
+    \Mt{C}_{k-1} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{C}_k.
+\end{displaymath}
+We claim that
+\begin{equation}
+  \label{eq:1}
+  \M{U}_k = \Mt{U}_k \Mt{C}_k
+\end{equation}
+for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
+\begin{displaymath}
+  \Mt{U}_{k+1} = [\Mt{U}_k, \ve{p}_{k+1}],
+\end{displaymath}
+we have
+\begin{displaymath}
+  \Mt{U}_{k+1} \Mt{C}_{k+1}
+  =
+  [\Mt{U}_k, \ve{p}_{k+1}]
+  \begin{bmatrix}
+    \Mt{C}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{C}_{k+1}
+  \\
+  =
+  [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
+\end{displaymath}
+By the inductive hypothesis, expressed as \eqref{eq:1}, 
+\begin{displaymath}
+  [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+  =
+  [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+  =
+  \M{U}_{k+1}.
+\end{displaymath}
+Thus
+\begin{displaymath}
+  \label{eq:1}
+  \M{U}_{k+1} = \Mt{U}_{k+1} \Mt{C}_{k+1},
+\end{displaymath}
+and so the claim holds for $k+1$.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references.bib}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% fill-column: 2000
+%%% End:
