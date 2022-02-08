@@ -111,6 +111,10 @@
 
 \usepackage{xspace}
 
+\newcommand\undermat[2]{%
+  \makebox[0pt][l]{$\smash{\underbrace{\phantom{%
+    \begin{bmatrix}#2\end{bmatrix}}}_{\text{$#1$}}}$}#2}
+
 \makeatletter
 \DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
 \def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
@@ -276,7 +280,7 @@
 
 %\maketitle
 
-\section{}
+\section{The Iterative Process}
 
 Let
 \begin{displaymath}
@@ -284,8 +288,20 @@ Let
 \end{displaymath}
 Then
 \begin{displaymath}
-  \M{X}_1 = [\M{U}_0, \ve{p}_1] \M{K}_1 [\M{V}_0, \ve{q}_1]^\T
-  = [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T [\M{V}_0, \ve{q}_1]^\T.
+  \M{X}_1
+  = [\M{U}_0, \ve{p}_1] \M{K}_1
+  \begin{bmatrix}
+    \M{V}_0 & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}^\T
+  =
+  [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T
+  \begin{bmatrix}
+    \M{V}_0 & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}^\T.
  \end{displaymath}
 With
 \begin{displaymath}
@@ -293,7 +309,13 @@ With
   \quad
   \text{and}
   \quad
-  \M{V}_1 = [\M{V}_0, \ve{q}_1] \M{D}_1,
+  \M{V}_1 =
+  \begin{bmatrix}
+    \M{V}_0 & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}_1,
 \end{displaymath}
 we have
 \begin{displaymath}
@@ -301,20 +323,45 @@ we have
 \end{displaymath}
 Generally, for any $k \in \N$, 
 \begin{displaymath}
-  \M{X}_k = [\M{U}_{k-1}, \ve{p}_k] \M{K}_k [\M{V}_{k-1}, \ve{q}_k]^\T
-  = [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T [\M{V}_{k-1}, \ve{q}_k]^\T,
+  \M{X}_k
+  =
+  [\M{U}_{k-1}, \ve{p}_k] \M{K}_k
+  \begin{bmatrix}
+    \M{V}_{k-1} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}^\T
+  =
+  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T
+   \begin{bmatrix}
+    \M{V}_{k-1} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}^\T,
 \end{displaymath}
 and with
 \begin{displaymath}
   \M{U}_k =  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k
   \quad
-  \M{V}_k = [\M{V}_{k-1}, \ve{q}_k] \M{D}_k,
+  \text{and}
+  \quad
+  \M{V}_k
+  =
+  \begin{bmatrix}
+    \M{V}_{k-1} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}_k,
 \end{displaymath}
 we have
 \begin{displaymath}
   \M{X}_k =  \M{U}_k \M{S}_k \M{V}_k^\T.
 \end{displaymath}
-Note that
+
+\section{Updating the $\M{U}$ matrices}
+
+Note that, for each $k \in \N$, 
 \begin{align*}
   \M{U}_{k+1}
   &
@@ -339,11 +386,18 @@ This equality inspires us to introduce, inductively, the following matrices:
   \quad
   \text{and}
   \quad
-  \Mt{C}_1 = \Mt{C}_1,
+  \Mt{C}_1 = \M{C}_1,
 \end{displaymath}
 and, for each positive integer $k$ greater than 1, 
 \begin{displaymath}
-  \Mt{U}_k = [\M{U}_0, \ve{p}_1, \dots \ve{p}_k]
+  \Mt{U}_k
+  =
+  [ \Mt{U}_{k-1},  \ve{p}_k]
+  \
+  (
+  = 
+  [\M{U}_0, \ve{p}_1, \dots, \ve{p}_k]
+  )
   \quad
   \text{and}
   \quad
@@ -363,7 +417,18 @@ We claim that
 \end{equation}
 for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
 \begin{displaymath}
-  \Mt{U}_{k+1} = [\Mt{U}_k, \ve{p}_{k+1}],
+  \Mt{U}_{k+1} = [\Mt{U}_k, \ve{p}_{k+1}]
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{C}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{C}_{k+1},
 \end{displaymath}
 we have
 \begin{displaymath}
@@ -384,14 +449,197 @@ By the inductive hypothesis, expressed as \eqref{eq:1},
 \begin{displaymath}
   [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
   =
+  [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
+\end{displaymath}
+But
+\begin{displaymath}
   [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
   =
-  \M{U}_{k+1}.
+  \M{U}_{k+1}
 \end{displaymath}
-Thus
+by definition.  Thus
 \begin{displaymath}
   \label{eq:1}
   \M{U}_{k+1} = \Mt{U}_{k+1} \Mt{C}_{k+1},
+\end{displaymath}
+and so the claim holds for $k+1$.
+
+\section{Updating the $\M{V}$ matrices}
+
+Note that, for each $k \in \N$, 
+\begin{align*}
+  \M{V}_{k+1}
+  &
+    =
+    \begin{bmatrix}
+      \M{V}_k & \0
+      \\
+      \0^T & 1
+    \end{bmatrix}
+             \M{D}_{k+1}
+             =
+             \begin{bmatrix}
+               \begin{bmatrix}
+                 \M{V}_{k-1} & \0
+                 \\
+                 \0^T & 1
+               \end{bmatrix}
+               \M{D}_k & \0
+               \\
+               \0^T & 1
+             \end{bmatrix}
+                      \M{D}_{k+1}
+  \\
+  & =
+    \begin{bmatrix}
+      \begin{bmatrix}
+        \M{V}_{k-1} & \0
+        \\
+        \0^T & 1
+      \end{bmatrix}
+      & \0
+      \\
+      \0^T & 1
+    \end{bmatrix}
+             \begin{bmatrix}
+               \M{D}_k & \0
+               \\
+               \0^\T & 1
+             \end{bmatrix}
+                       \M{D}_{k+1}.
+\end{align*}
+This equality suggests that we introduce, inductively, the following matrices:
+\begin{displaymath}
+  \Mt{V}_1
+  =
+  \begin{bmatrix}
+    \M{V}_0 & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_1 = \M{D}_1,
+\end{displaymath}
+and, for each positive integer $k$ greater than 1, 
+\begin{displaymath}
+  \Mt{V}_k
+  =
+  \begin{bmatrix}
+    \Mt{V}_{k-1} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+            \
+            \left(=
+            \begin{bmatrix}
+              \M{V}_0 & \0 & \0 & \0 & \cdots & \0
+              \\
+              \0^\T & 1 & 0 &  0 & \cdots & 0
+              \\
+              \0^\T & 0 & 1 & 0 & \cdots & 0
+              \\
+              \vdots & \vdots & \vdots & \ddots & & \vdots 
+              \\
+              \vdots & \vdots & \vdots & & \ddots & \vdots 
+              \\
+              \0^\T & \undermat{\text{$k-1$ columns}}{0 & 0 & 0 & \cdots & 1}
+            \end{bmatrix}
+                                           \right)
+\end{displaymath}
+and
+\begin{displaymath}
+  \Mt{D}_k
+  =
+  \begin{bmatrix}
+    \Mt{D}_{k-1} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_k.
+\end{displaymath}
+We claim that
+\begin{equation}
+  \label{eq:2}
+  \M{V}_k = \Mt{V}_k \Mt{D}_k
+\end{equation}
+for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
+\begin{displaymath}
+   \Mt{V}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{V}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1},
+\end{displaymath}
+we have
+\begin{displaymath}
+  \Mt{V}_{k+1} \Mt{D}_{k+1}
+  =
+   \begin{bmatrix}
+    \Mt{V}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}
+  \\
+  =
+  \begin{bmatrix}
+     \Mt{V}_k \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}.
+\end{displaymath}
+By the inductive hypothesis, expressed as \eqref{eq:2}, 
+\begin{displaymath}
+  \begin{bmatrix}
+     \Mt{V}_k \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}
+  =
+  \begin{bmatrix}
+     \M{V}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}.
+\end{displaymath}
+But
+\begin{displaymath}
+  \begin{bmatrix}
+     \M{V}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}
+  =
+  \M{V}_{k+1}
+\end{displaymath}
+by definition.  Thus
+\begin{displaymath}
+  \label{eq:1}
+  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1},
 \end{displaymath}
 and so the claim holds for $k+1$.
 
