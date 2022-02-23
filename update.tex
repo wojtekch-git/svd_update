@@ -19,6 +19,8 @@
 \usepackage{natbib}
 \usepackage{doi}
 
+\usepackage{comment}
+
 % Uncomment to override  the `A preprint' in the header
 % \renewcommand{\headeright}{}
 % \renewcommand{\undertitle}{}
@@ -70,7 +72,7 @@
 %\renewcommand{\sfdefault}{phv} 
 
 %text structures
-\usepackage{enumitem}
+\usepackage[inline,shortlabels]{enumitem}
 \usepackage{tabu}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{tcolorbox}
@@ -110,6 +112,10 @@
 \usepackage{stmaryrd} % provides double brackets
 
 \usepackage{xspace}
+
+\DeclareMathOperator*{\diag}{diag}
+
+\renewcommand{\arraystretch}{1.3} 
 
 \newcommand\undermat[2]{%
   \makebox[0pt][l]{$\smash{\underbrace{\phantom{%
@@ -178,8 +184,12 @@
 \newcommand{\IG}{\bm{\nabla}^{\mathrm{int}}}
 \newcommand{\IH}{\bm{\mathsf{D}\nabla}^{\mathrm{int}}}
 \newcommand{\M}[1]{\mathbf{#1}}
-\newcommand{\Mt}[1]{\tilde{\M{#1}}} 
+\newcommand{\Mt}[1]{\tilde{\M{#1}}}
+\newcommand{\Mr}[1]{{\M{#1}}^{\mathrm{red}}}
+\newcommand{\Mrt}[1]{{\tilde{\M{#1}}}^{\mathrm{red}}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Nzero}{\Z^+}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\top}
 \newcommand{\comp}[2]{{\left\llbracket #1\right\rrbracket}_{#2}}
@@ -196,6 +206,7 @@
 \newcommand{\sderiv}[2]{{\partial #1}/{\partial #2}}
 \newcommand{\ud}{\,\mathrm d}
 \newcommand{\ve}[1]{\mathbf{#1}}
+\newcommand{\eve}[2]{\mathbf{e}^{(#1)}_{#2}}
 
 \newcommand{\derivtwo}[3]{%
   \ifthenelse{\equal{#2}{#3}}
@@ -280,7 +291,9 @@
 
 %\maketitle
 
-\section{The Iterative Process}
+\section{Updating}
+
+\subsection{The Iterative Process}
 
 Let
 \begin{displaymath}
@@ -359,7 +372,7 @@ we have
   \M{X}_k =  \M{U}_k \M{S}_k \M{V}_k^\T.
 \end{displaymath}
 
-\section{Updating the $\M{U}$ matrices}
+\subsection{Updating the $\M{U}$ matrices}
 
 Note that, for each $k \in \N$, 
 \begin{align*}
@@ -459,12 +472,11 @@ But
 \end{displaymath}
 by definition.  Thus
 \begin{displaymath}
-  \label{eq:1}
   \M{U}_{k+1} = \Mt{U}_{k+1} \Mt{C}_{k+1},
 \end{displaymath}
 and so the claim holds for $k+1$.
 
-\section{Updating the $\M{V}$ matrices}
+\subsection{Updating the $\M{V}$ matrices}
 
 Note that, for each $k \in \N$, 
 \begin{align*}
@@ -638,10 +650,615 @@ But
 \end{displaymath}
 by definition.  Thus
 \begin{displaymath}
-  \label{eq:1}
   \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1},
 \end{displaymath}
 and so the claim holds for $k+1$.
+
+\subsection{Updating when the rank does not increase}
+
+\subsubsection{Description}
+
+For each $n \in \N$, let $r_n$ denote the rank of $\M{K}_n$. Suppose that $k \in \N$ is such that $r_{k+1} = r_k$. Then the unreduced SVD of $\M{K}_{k+1}$ takes the form
+\begin{displaymath}
+  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1} \M{D}^\T_{k+1},
+\end{displaymath}
+where
+\begin{align*}
+  \M{C}_{k+1}
+  & =
+  \begin{bmatrix}
+    \M{C}^{1:r_k, 1:r_k}_{k+1} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix},
+  \\[2ex]
+  \M{S}_{k+1}
+  & =
+    \diag(s_{1,k+1}, \dots, s_{r_k,k+1}, 0),
+  \\[2ex]
+  \M{D}_{k+1}
+  & =
+    \begin{bmatrix}
+      \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
+      \\
+      \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
+    \end{bmatrix}.
+\end{align*}
+The matrix $\M{K}_{k+1}$ admits also an SVD in reduced form, namely
+\begin{displaymath}
+  \M{K}_{k+1} = \Mr{C}_{k+1} \Mr{S}_{k+1} (\Mr{D}_{k+1})^\T,
+\end{displaymath}
+where
+\begin{align*}
+  \Mr{C}_{k+1}
+  & =
+  \begin{bmatrix}
+    \M{C}^{1:r_k, 1:r_k}_{k+1} 
+    \\
+    \0^\T 
+  \end{bmatrix},
+  \\[2ex]
+  \Mr{S}_{k+1}
+  & =
+    \diag(s_{1,k+1}, \dots, s_{r_k,k+1}),
+  \\[2ex]
+  \Mr{D}_{k+1}
+  & =
+    \begin{bmatrix}
+      \M{D}^{1:r_k, 1:r_k}_{k+1} 
+      \\
+      \M{D}^{r_k+1, 1:r_k}_{k+1} 
+    \end{bmatrix}.
+\end{align*}
+Exploiting the latter representation, one can show that if we adopt
+\begin{displaymath}
+  \Mt{U}_{k+1} =  \Mt{U}_k
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, 1:r_k}_{k+1}
+\end{displaymath}
+for an update rule for the matrices $\Mt{U}_k$ and $\Mt{C}_k$, and if we adopt 
+\begin{displaymath}
+  \Mt{V}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{V}_k
+    \\
+   \M{D}^{r_k+1, 1:r_k}_{k+1}  
+    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+  \end{bmatrix}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_{k+1}
+  =
+    \Mt{D}_k
+  \M{D}^{1:r_k,1:r_k}_{k+1}
+\end{displaymath}
+for an update rule for the matrices $\Mt{V}_k$ and $\Mt{D}_k$, then
+the SVD of $\M{X}_{k+1}$ is given by
+\begin{displaymath}
+  \M{X}_{k+1} = \Mt{C}_{k+1} \Mr{S}_{k+1} \Mt{D}^\T_{k+1}.
+\end{displaymath}
+
+\subsubsection{Explanation}
+
+\begin{align*}
+  \begin{bmatrix}
+    \Mt{V}_k \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+            \M{D}_{k+1}
+          & =
+            \begin{bmatrix}
+              \Mt{V}_k \Mt{D}_k & \0
+              \\
+              \0^\T & 1
+            \end{bmatrix}
+                      \begin{bmatrix}
+                        \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
+                        \\
+                        \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
+                      \end{bmatrix}
+  \\
+                      & =
+                        \begin{bmatrix}
+                          \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+                          &
+                           \Mt{V}_k \Mt{D}_k \M{D}^{r_k+1, 1:r_k}_{k+1} 
+                          \\
+                          \M{D}^{r_k+1, 1:r_k}_{k+1}
+                          &
+                          \M{D}^{r_k+1, r_k+1}_{k+1}
+                        \end{bmatrix}
+\end{align*}
+Deleting the last column, we obtain the matrix
+\begin{displaymath}
+  \begin{bmatrix}
+    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+    \\
+    \M{D}^{r_k+1, 1:r_k}_{k+1}
+  \end{bmatrix},
+\end{displaymath}
+which we represent as
+\begin{align*}
+  \begin{bmatrix}
+    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+    \\
+    \M{D}^{r_k+1, 1:r_k}_{k+1}
+  \end{bmatrix}
+  & =
+  \begin{bmatrix}
+    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+    \\
+    \M{D}^{r_k+1, 1:r_k}_{k+1}
+  \end{bmatrix}
+  \\
+  & =
+  \begin{bmatrix}
+    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+    \\
+    \M{D}^{r_k+1, 1:r_k}_{k+1}
+    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+    \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+  \end{bmatrix}
+   \\
+  & =
+    \underbrace{%
+  \begin{bmatrix}
+    \Mt{V}_k
+    \\
+    \M{D}^{r_k+1, 1:r_k}_{k+1}
+    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+  \end{bmatrix}
+  }_{\Mt{V}_{k+1}}
+  \underbrace{%
+  \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+  }_{\Mt{D}_{k+1}}.
+\end{align*}
+
+\section{Downdating}
+
+Let $\M{X}_0$ be a $p \times q$ matrix, and let
+\begin{displaymath}
+  \M{X}_0 = \M{U}_0 \M{S}_0 \M{V}_0^\T
+\end{displaymath}
+be the SVD of $\M{X}_0$.
+For $1 \leq k \leq q$, let $\M{X}_k$ be the matrix obtained from $\M{X}_0$ by deleting the last $k$ columns,
+\begin{displaymath}
+  \M{X}_k = \M{X}_0^{:,1:(q -k)}.
+\end{displaymath}
+Let 
+\begin{displaymath}
+  \M{X}_k = \M{U}_k \M{S}_k\M{V}_k^\T
+\end{displaymath}
+be the SVD of $\M{X}_k$. We shall give a recursive formula for $\M{U}_k$, $\M{S}_k$, $\M{V}_k$, and some auxiliary matrices.
+
+Given $n \in \N$ and $i \in \{1,2, \dots, n\}$, let $\eve{i}{n} = [0, \dots, 0, 1, 0, \dots, 0]^\T$ be the length-$n$ vector with $1$ in the $i$-th position and $0$ in all others.
+
+For each $k = 0, 1, \dots, q-1$, let $r_k$ denote the rank of $\M{X}_k$, which is the same as the rank of $\M{S}_k$.
+
+We shall first give a formula for the SVD of $\M{X}_1$. Let
+\begin{displaymath}
+  \ve{n}_1 = \M{V}_0^\T \eve{q}{q}
+  \quad
+  \text{and}
+  \quad
+  \ve{q}_1 =  \frac{\eve{q}{q} - \M{V}_0 \ve{n}_1}{\sqrt{1 - \| \ve{n}_1\|^2}}.
+\end{displaymath}
+We consider two cases.
+\begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+\item Suppose that $\ve{q}_1 \neq \0$. Let
+  \begin{displaymath}
+    \M{K}_1
+    =
+    \begin{bmatrix}
+      \M{S}_0 & \0
+      \\
+      \0^\T & 0
+    \end{bmatrix}
+    \left(
+      \M{I}
+      -
+      \begin{bmatrix}
+        \ve{n}_1
+        \\
+        0
+      \end{bmatrix}
+      \begin{bmatrix}
+        \ve{n}_1
+        \\
+        \sqrt{1 - \| \ve{n}_1 \|^2}
+      \end{bmatrix}^\T
+    \right).
+  \end{displaymath}
+  Let
+  \begin{displaymath}
+    \M{K}_1 = \M{C}_1 \M{S}_1  \M{D}_1^\T
+  \end{displaymath}
+  be the SVD of $\M{K}_1$.  Then the matrix $\M{C}_1$ takes the form
+  \begin{displaymath}
+    \M{C}_1
+    =
+    \begin{bmatrix}
+      \M{C}_1^{1:r_0, :} 
+      \\
+      \0^\T 
+    \end{bmatrix}.
+  \end{displaymath}
+  Set
+  \begin{displaymath}
+    \Mt{C}_1 = \M{C}^{1:r_0,:}_1,
+    \quad
+    \Mt{V}_1 = [\M{V}_0, \ve{q}_1]^{1:(q - 1),:}
+    \quad
+    \text{and}
+    \quad
+    \Mt{D}_1 = \M{D}_1.
+  \end{displaymath}
+  Here $[\M{V}_0, \ve{q}_1]^{1:(q - 1),:}$ stands for the matrix $[\M{V}_0, \ve{q}_1]$ with the last row deleted. The SVD of $\M{X}_1$ is given by
+  \begin{displaymath}
+    \M{X}_1 = \M{U}_1 \M{S}_1\M{V}_1^\T,
+  \end{displaymath}
+  where
+  \begin{displaymath}
+    \M{U}_1 = \M{U}_0 \Mt{C}_1
+    \quad
+    \text{and}
+    \quad
+    \M{V}_1 = \Mt{V}_1 \Mt{D}_1.
+  \end{displaymath}
+\item Suppose that $\ve{q}_1 = \0$. Let
+  \begin{displaymath}
+    \M{K}_1
+    =
+    \M{S}_0 - \M{S}_0 \ve{n}_1 \ve{n}_1^\T
+    =
+    \M{S}_0 \left( \M{I} -  \ve{n}_1 \ve{n}_1^\T \right).
+  \end{displaymath}
+  Let
+  \begin{displaymath}
+    \M{K}_1 = \M{C}_1 \M{S}_1  \M{D}_1^\T
+  \end{displaymath}
+  be the SVD of $\M{K}_1$.  Set
+  \begin{displaymath}
+    \Mt{C}_1 = \M{C}_1,
+    \quad
+    \Mt{V}_1 = \M{V}_0^{1:(q - 1),:}
+    \quad
+    \text{and}
+    \quad
+    \Mt{D}_1 = \M{D}_1.
+  \end{displaymath}
+  Here $\M{V}_0^{1:(q - 1),:}$ stands for the matrix $\M{V}_0$ with the last row deleted. The SVD of $\M{X}_1$ is given by
+  \begin{displaymath}
+    \M{X}_1 = \M{U}_1 \M{S}_1\M{V}_1^\T,
+  \end{displaymath}
+  where
+  \begin{displaymath}
+    \M{U}_1 = \M{U}_0 \Mt{C}_1
+    \quad
+    \text{and}
+    \quad
+    \M{V}_1 = \Mt{V}_1 \Mt{D}_1.
+  \end{displaymath}
+\end{enumerate}
+
+We shall now give a formula for the SVD of $\M{X}_{k+1}$. Suppose that $\Mt{C}_k$, $\Mt{V}_k$, $\Mt{D}_k$, $\M{S}_k$, and $\M{V}_k$ are known. Let
+\begin{displaymath}
+  \ve{n}_{k+1} = \M{V}_k^\T \eve{q-k}{q-k}
+  \quad
+  \text{and}
+  \quad
+  \ve{q}_{k+1} =  \frac{\eve{q-k}{q-k} - \M{V}_k \ve{n}_{k+1}}{\sqrt{1 - \| \ve{n}_{k+1}\|^2}}.
+\end{displaymath}
+We consider two cases.
+\begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+\item Suppose that $\ve{q}_{k+1} \neq \0$. Let
+\begin{displaymath}
+  \M{K}_{k+1}
+  =
+  \begin{bmatrix}
+    \M{S}_k & \0
+    \\
+    \0^\T & 0
+  \end{bmatrix}
+  \left(
+    \M{I}
+    -
+    \begin{bmatrix}
+      \ve{n}_{k+1}
+      \\
+      0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \ve{n}_{k+1}
+      \\
+      \sqrt{1 - \| \ve{n}_{k+1} \|^2}
+    \end{bmatrix}^\T
+  \right).
+\end{displaymath}
+Let
+\begin{displaymath}
+  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
+\end{displaymath}
+be the SVD of $\M{K}_{k+1}$.  Then the matrix $\M{C}_{k+1}$ takes the form
+\begin{displaymath}
+  \M{C}_{k+1}
+  =
+  \begin{bmatrix}
+    \M{C}_{k+1}^{1:r_k, :} 
+    \\
+    \0^\T 
+  \end{bmatrix}.
+\end{displaymath}
+Set
+\begin{displaymath}
+  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, :}_{k+1},
+  \quad
+  \Mt{V}_{k+1}
+  =
+  [\Mt{V}_k,  \ve{q}_{k+1}]^{1:(q-k-1),:},
+\end{displaymath}
+and
+\begin{displaymath}
+  \Mt{D}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}.
+\end{displaymath}
+Here $[\Mt{V}_k, \ve{q}_{k+1}]^{1:(q - k - 1),:}$ stands for the matrix $[\Mt{V}_k, \ve{q}_{k+1}]$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
+\begin{displaymath}
+  \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
+\end{displaymath}
+where
+\begin{displaymath}
+  \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
+  \quad
+  \text{and}
+  \quad
+  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
+\end{displaymath}
+\item Suppose that $\ve{q}_{k+1} =\0$. Let
+\begin{displaymath}
+  \M{K}_{k+1}
+  = \M{S}_k - \M{S}_k \ve{n}_{k+1} \ve{n}_{k+1}^\T
+  = \M{S}_k \left( \M{I} - \ve{n}_{k+1} \ve{n}_{k+1}^\T \right).
+\end{displaymath}
+Let
+\begin{displaymath}
+  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
+\end{displaymath}
+be the SVD of $\M{K}_{k+1}$.  
+Set
+\begin{displaymath}
+  \Mt{C}_{k+1} = \Mt{C}_k \M{C}_{k+1},
+  \quad
+  \Mt{V}_{k+1}
+  =
+  \Mt{V}_k^{1:(q-k-1),:},
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_{k+1}
+  = \Mt{D}_k \M{D}_{k+1}.
+\end{displaymath}
+Here $\Mt{V}_k^{1:(q - k - 1),:}$ stands for the matrix $\Mt{V}_k$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
+\begin{displaymath}
+  \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
+\end{displaymath}
+where
+\begin{displaymath}
+  \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
+  \quad
+  \text{and}
+  \quad
+  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
+\end{displaymath}
+
+\end{enumerate}
+
+% \begin{align*}
+%   \M{C}_1
+%   & =
+%     \begin{bmatrix}
+%       \M{C}_1^{1:r_0, :} 
+%       \\
+%       \0^\T 
+%     \end{bmatrix},
+%   % =
+%   % \begin{bmatrix}
+%   %   \M{C}^{1:r_0, 1:r_1} 
+%   %   \\
+%   %   \0^\T 
+%   % \end{bmatrix},
+%   \\[2ex]
+%   \M{S}_1
+%   & =
+%     \diag(s_1^{(1)}, \dots, s_{r_1}^{(1)}),
+%   \\[2ex]
+%   \M{D}_1
+%   & =
+%     \begin{bmatrix}
+%       \M{D}^{1:r_0, 1:r_1}_1
+%       \\
+%       \M{D}^{r_0+1, 1:r_1}_1
+%     \end{bmatrix}.
+% \end{align*}
+
+\begin{comment}
+
+\begin{displaymath}
+  \M{U}_1 = \M{U}_0 \Mt{C}_1
+\end{displaymath}
+
+Let
+\begin{displaymath}
+  \Mt{V}_1 = [\M{V}_0, \ve{q}_1]^{1:(q_0 - 1),:}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_1 = \M{D}_1,
+\end{displaymath}
+
+\begin{displaymath}
+   \M{X}_1 = \M{U}_1 \M{S}_1 \Mt{V}_1 \Mt{D}_1.
+\end{displaymath}
+
+
+\begin{displaymath}
+  \ve{n}_k = \M{V}_{k-1}^\T \eve{q-k+1}{q},
+  \quad
+  \ve{q}_k
+  = \frac{\eve{q-k+1}{q} - \M{V}_{k-1} \ve{n}_k}
+  {\|  \eve{q-k+1}{q} - \M{V}_{k-1} \ve{n}_k\|}
+  =
+  \frac{\eve{q-k+1}{q} - \M{V}_{k-1} \ve{n}_k}{\sqrt{1 - \| \ve{n}_k \|^2}}
+\end{displaymath}
+
+\begin{align*}
+  \|  \eve{q-k+1}{q} - \M{V}_{k-1} \ve{n}_k\|^2
+  & =
+  \| \eve{q-k+1}{q} \| ^2
+    - 2 (\eve{q-k+1}{q})^\T \M{V}_{k-1}  \M{V}_{k-1}^\T \eve{q-k+1}{q}
+  \\
+  & \quad
+    + \|  \M{V}_{k-1}  \M{V}_{k-1}^\T \eve{q-k+1}{q} \|^2
+\end{align*}
+
+\begin{displaymath}
+  (\eve{q-k+1}{q})^\T \M{V}_{k-1}  \M{V}_{k-1}^\T \eve{q-k+1}{q}
+  =  \ve{n}_k^\T  \ve{n}_k = \| \ve{n}_k \|^2
+\end{displaymath}
+
+\begin{displaymath}
+  \|  \M{V}_{k-1}  \M{V}_{k-1}^\T \eve{q-k+1}{q} \|
+  =
+  \| \M{V}_{k-1}^\T \eve{q-k+1}{q} \| = \|  \ve{n}_k \|.
+\end{displaymath}
+
+\begin{displaymath}
+  \M{K}_k
+  =
+  \begin{bmatrix}
+    \M{S}_{k-1} & \0
+    \\
+    \0^\T & 0
+  \end{bmatrix}
+  \left(
+    \M{I}
+    -
+    \begin{bmatrix}
+      \ve{n}_k
+      \\
+      0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \ve{n}_k
+      \\
+      \sqrt{1 - \| \ve{n}_k \|^2}
+    \end{bmatrix}
+    \right)
+\end{displaymath}
+
+For each $1 \leq k \leq K$, the (reduced) SVD of $\M{K}_k$ takes the form
+\begin{displaymath}
+  \M{K}_k = \M{C}_k \M{S}_k  \M{D}_k^\T,
+\end{displaymath}
+where
+\begin{align*}
+  \M{C}_k
+  & =
+  \begin{bmatrix}
+    \M{C}^{1:r_k, 1:r_k}_k
+    \\
+    \0^\T 
+  \end{bmatrix},
+  \\[2ex]
+  \M{S}_k
+  & =
+    \diag(s_{1,k}, \dots, s_{r_k,k}),
+  \\[2ex]
+  \M{D}_k
+  & =
+    \begin{bmatrix}
+      \M{D}^{1:r_k, 1:r_k}_k 
+      \\
+      \M{D}^{r_k+1, 1:r_k}_k
+    \end{bmatrix}.
+\end{align*}
+
+Let
+\begin{displaymath}
+  \Mt{C}_1 = \M{C}^{1:r_0,:}_1
+\end{displaymath}
+and, for each $1 \leq k \leq K - 1$, let
+\begin{displaymath}
+  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, :}_{k+1}.
+\end{displaymath}
+For each $1 \leq k \leq K - 1$, let
+\begin{displaymath}
+  \M{U}_k = \M{U}_0 \Mt{C}_k
+\end{displaymath}
+
+
+Let
+\begin{displaymath}
+  \Mt{U}_1 = \M{U}_0
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_1 = \M{C}^{1:r_1, 1:r_1}_1
+\end{displaymath}
+and, for each $1 \leq k \leq K - 1$, 
+\begin{displaymath}
+  \Mt{U}_{k+1} =  \Mt{U}_k
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_{k+1}, 1:r_{k+1}}_{k+1}.
+\end{displaymath}
+
+
+
+
+Let
+\begin{displaymath}
+  \Mt{V}_1 = [\M{V}_0, \ve{q}_1]
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_1 = \M{D}_1,
+\end{displaymath}
+and, for each $1 \leq k \leq K - 1$, let
+\begin{displaymath}
+  \Mt{V}_{k+1}
+  =
+  [\Mt{V}_k,  \ve{q}_{k+1}]
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}_{k+1}
+  =
+  \begin{bmatrix}
+    \Mt{D}_k & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}_{k+1}.
+\end{displaymath}
+Then
+\begin{displaymath}
+  \M{X}_k = \Mt{U}_k \M{S}_k \Mt{V}_k \Mt{D}_k.
+\end{displaymath}
+
+\end{comment}
 
 \bibliographystyle{unsrtnat}
 \bibliography{references.bib}
