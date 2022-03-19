@@ -19,6 +19,92 @@
 \usepackage{natbib}
 \usepackage{doi}
 
+\usepackage{algpseudocode}
+
+\usepackage{framed}
+
+\usepackage{amsmath,amssymb}
+\usepackage[amsmath,framed,thmmarks]{ntheorem}
+
+\makeatletter
+\newtheoremstyle{mybreak}%
+  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont
+          ##1\ ##2\theorem@separator}\hbox{\strut}}}]}%
+  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont
+%           ##1\ ##2\ (##3)\theorem@separator}\hbox{\strut}}}]}% DELETED
+          ##1\ ##2:\ ##3\theorem@separator}\hbox{\strut}}}]}% NEW
+  \makeatother
+
+% \theoremstyle{mybreak}
+% %\theoremheaderfont{\normalfont\smallskip\scriptsize\scshape}
+% \theoremheaderfont{\normalfont\smallskip\scriptsize\bfseries}
+% \theorembodyfont{\normalfont\scriptsize}
+% \theoremindent0.5cm
+% \newframedtheorem{algorithm}{Algorithm}
+
+\theoremstyle{mybreak}
+\theorembodyfont{\normalfont}
+\theoremseparator{\smallskip}
+\theoremprework{\bigskip\hrule\smallskip}
+%\theorempostwork{\bigskip\hrule\bigskip}
+\newtheorem{algorithm}{Algorithm}
+
+\usepackage{chngcntr}
+\counterwithin{equation}{section}
+
+\newcounter{dummy}
+\numberwithin{dummy}{section}
+
+\newtheorem{theorem}{Theorem}%[section]
+
+\theorembodyfont{\rmfamily\slshape}
+\theoremstyle{plain}
+\newtheorem{result}{Result}[section]
+
+\theoremstyle{plain}
+\theoremseparator{.}
+\theoremprework{\bigskip\hrule\bigskip}
+\theorempostwork{\smallskip\hrule\bigskip}
+\newtheorem*{problem}{Problem}
+
+% definition
+%\theoremstyle{break}
+%\theoremseparator{.}
+%\theoremprework{\bigskip\hrule\bigskip}
+%\theorempostwork{\smallskip\hrule\bigskip}
+%\newtheorem*{def}{Definition}
+
+\theoremstyle{plain}
+\theoremseparator{.}
+\theoremprework{\bigskip}
+\theorempostwork{\smallskip}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{plain}
+\theoremseparator{.}
+\theoremprework{\bigskip}
+\theorempostwork{\smallskip}
+\newtheorem{example}{Example}[section]
+
+\AfterEndEnvironment{definition}{\noindent\ignorespaces}
+
+\newtheorem{rmk}{Remark}
+
+% A proof environment.
+% This is done with the extra commands made available from ntheorem
+% \theoremstyle{nonumberplain}
+\makeatletter
+\newtheoremstyle{MyNonumberplain}%
+  {\item[\theorem@headerfont\hskip\labelsep ##1\theorem@separator]}%
+  {\item[\theorem@headerfont\hskip\labelsep ##3\theorem@separator]}
+\makeatother
+\theoremstyle{MyNonumberplain}
+\theoremheaderfont{\normalfont\itshape}
+\theorembodyfont{\normalfont}
+\theoremseparator{.}
+\theoremsymbol{\ensuremath{\square}}
+\newtheorem{proof}{Proof}
+
 \usepackage{comment}
 
 % Uncomment to override  the `A preprint' in the header
@@ -96,8 +182,8 @@
 % \usepackage{mathrsfs}
 % \usepackage{mathtools}
 
-\usepackage{amsmath,amsthm}
-\interdisplaylinepenalty=2500
+% \usepackage{amsmath,amsthm}
+% \interdisplaylinepenalty=2500
 
 \usepackage{amssymb}
 %\usepackage{bbm}
@@ -114,6 +200,8 @@
 \usepackage{xspace}
 
 \DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\rk}{rank}
+\DeclareMathOperator{\col}{col}
 
 \renewcommand{\arraystretch}{1.3} 
 
@@ -208,6 +296,12 @@
 \newcommand{\ve}[1]{\mathbf{#1}}
 \newcommand{\eve}[2]{\mathbf{e}^{(#1)}_{#2}}
 
+\newcommand{\Mat}[2]{%
+  \ifthenelse{\equal{#2}{1}}
+  {\R^{#1}}
+  {\R^{#1 \times #2}}
+}
+
 \newcommand{\derivtwo}[3]{%
   \ifthenelse{\equal{#2}{#3}}
   {\frac{\partial^2#1}{\partial #2^2}}
@@ -242,8 +336,8 @@
 
 \setlist{nosep} 
 
-\newtheorem{theorem}{Theorem}%[section]
-\newtheorem*{theorem*}{Theorem}
+% \newtheorem{theorem}{Theorem}%[section]
+% \newtheorem*{theorem*}{Theorem}
 
 \newenvironment{changemargin}[2]{%
   \begin{list}{}{%
@@ -275,7 +369,7 @@
 \author{}
 
 % \affil{%
-%   Insight Via Artificial Intelligence Pty Ltd \\ Suite 811, 147 Pirie Street \\ Adelaide, SA 5000}
+% Insight Via Artificial Intelligence Pty Ltd \\ Suite 811, 147 Pirie Street \\ Adelaide, SA 5000}
 
 \maketitle
 
@@ -287,537 +381,1513 @@
 %   integrated gradient \and integrated Hessian \and single integral \and double integral
 % \end{keywords}
 
-%\title{A Note on the Integrated Hessian}
+% \title{A Note on the Integrated Hessian}
 
-%\maketitle
+% \maketitle
 
 \section{Updating}
 
-\subsection{The Iterative Process}
+\subsection{The method}
 
-Let
+Let $\R$ denote the set of real numbers, and let $\Mat{m}{n}$ denote the set of $m \times n$ matrices with entries in $\R$.  We identify coordinate vectors in $\R^n$ with $n \times 1$ matrices in $\R^{n \times 1}$, or, what is the same, with length-$n$ column vectors with real entries.  Let $\M{X} \in \Mat{p}{q}$ be a matrix of rank $r$, with $r \geq 1$. Let
+\begin{equation}
+  \label{eq:1}
+  \M{X} = \M{U} \M{S} \M{V}^\T
+\end{equation}
+be the thin SVD of $\M{X}$.  Here $\M{U} \in \Mat{p}{r}$ and $\M{V} \in \Mat{q}{r}$ have unit-norm, orthogonal columns, which can be expressed as
 \begin{displaymath}
-  \M{X}_0 = \M{U}_0 \M{S}_0 \M{V}_0^\T.
-\end{displaymath}
-Then
-\begin{displaymath}
-  \M{X}_1
-  = [\M{U}_0, \ve{p}_1] \M{K}_1
-  \begin{bmatrix}
-    \M{V}_0 & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}^\T
-  =
-  [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T
-  \begin{bmatrix}
-    \M{V}_0 & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}^\T.
- \end{displaymath}
-With
-\begin{displaymath}
-  \M{U}_1 =  [\M{U}_0, \ve{p}_1] \M{C}_1
+  \M{U}^\T \M{U} = \M{I}_r
   \quad
   \text{and}
   \quad
-  \M{V}_1 =
-  \begin{bmatrix}
-    \M{V}_0 & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \M{D}_1,
+  \M{V}^\T \M{V} = \M{I}_r,
 \end{displaymath}
-we have
+and $\M{S} \in \Mat{r}{r}$ is a diagonal matrix with non-zero values.  Let $\ve{c} \in \Mat{p}{1}$, and let $\M{X}' \in \Mat{p}{(q+1)}$ be the horizontal concatenation of $\M{X}$ and $\ve{c}$,
 \begin{displaymath}
-  \M{X}_1 =   \M{U}_1 \M{S}_1 \M{V}_1^\T.
+  \M{X}' = [\M{X}, \ve{c}].
 \end{displaymath}
-Generally, for any $k \in \N$, 
-\begin{displaymath}
-  \M{X}_k
-  =
-  [\M{U}_{k-1}, \ve{p}_k] \M{K}_k
+We are interested in finding a formula for the thin SVD of $\M{X}'$.
+
+The key to obtaining a relevant expression is the representation
+\begin{equation}
+  \label{eq:2}
+  \M{X}' = [\M{U}, \ve{p}] \M{K}
   \begin{bmatrix}
-    \M{V}_{k-1} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}^\T
-  =
-  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T
-   \begin{bmatrix}
-    \M{V}_{k-1} & \0
+    \M{V} & \0
     \\
     \0^T & 1
   \end{bmatrix}^\T,
-\end{displaymath}
-and with
+\end{equation}
+where $\ve{p} \in \R^p$ is given by
 \begin{displaymath}
-  \M{U}_k =  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k
-  \quad
-  \text{and}
-  \quad
-  \M{V}_k
-  =
+  \ve{p} =
+  \begin{cases}
+    \frac{\ve{c} - \M{U} \M{U}^\T \ve{c}}{\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|} & \text{if $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$,}
+    \\
+    \0 & \text{otherwise,}
+  \end{cases}
+\end{displaymath}
+and $\M{K} \in \Mat{(r+1)}{(r+1)}$ is given by
+\begin{displaymath}
+  \M{K} =
   \begin{bmatrix}
-    \M{V}_{k-1} & \0
+    \M{S} & \M{U}^\T \ve{c} \\
+    \0^T & \| \ve{c} - \M{U} \M{U}^\T \ve{c} \|
+  \end{bmatrix}.
+\end{displaymath}
+Let
+\begin{equation}
+  \label{eq:3}
+  \M{K} = \M{C} \M{S}' \M{D}^\T
+\end{equation}
+be the thin SVD of $\M{K}$, with $\M{C} \in \Mat{(r+1)}{k}$, $\M{S}' \in \Mat{k}{k}$, and $\M{D} \in \Mat{(r+1)}{k}$, and with $k$ being the rank of $\M{K}$. Let $\M{U}' \in \Mat{p}{k}$ be given by
+\begin{equation}
+  \label{eq:4}
+  \M{U}' = [\M{U}, \ve{p}] \M{C},
+\end{equation}
+and let $\M{V}' \in \Mat{(q+1)}{k}$ be given by
+\begin{equation}
+  \label{eq:5}
+  \M{V}' =
+  \begin{bmatrix}
+    \M{V} & \0
     \\
     \0^T & 1
   \end{bmatrix}
-  \M{D}_k,
-\end{displaymath}
-we have
-\begin{displaymath}
-  \M{X}_k =  \M{U}_k \M{S}_k \M{V}_k^\T.
-\end{displaymath}
-
-\subsection{Updating the $\M{U}$ matrices}
-
-Note that, for each $k \in \N$, 
-\begin{align*}
-  \M{U}_{k+1}
-  &
-    = [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
-    =  [[\M{U}_{k-1}, \ve{p}_k] \M{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
-  \\
-  &
-    =
-    \left[
-    [\M{U}_{k-1}, \ve{p}_k], \ve{p}_{k+1}
-    \right]
-    \begin{bmatrix}
-      \M{C}_k & \0
-      \\
-      \0^\T & 1
-    \end{bmatrix}
-              \M{C}_{k+1}.
-\end{align*}
-This equality inspires us to introduce, inductively, the following matrices:
-\begin{displaymath}
-  \Mt{U}_1 = [\M{U}_0, \ve{p}_1]
-  \quad
-  \text{and}
-  \quad
-  \Mt{C}_1 = \M{C}_1,
-\end{displaymath}
-and, for each positive integer $k$ greater than 1, 
-\begin{displaymath}
-  \Mt{U}_k
-  =
-  [ \Mt{U}_{k-1},  \ve{p}_k]
-  \
-  (
-  = 
-  [\M{U}_0, \ve{p}_1, \dots, \ve{p}_k]
-  )
-  \quad
-  \text{and}
-  \quad
-  \Mt{C}_k
-  =
-  \begin{bmatrix}
-    \Mt{C}_{k-1} & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{C}_k.
-\end{displaymath}
-We claim that
-\begin{equation}
-  \label{eq:1}
-  \M{U}_k = \Mt{U}_k \Mt{C}_k
+  \M{D}.
 \end{equation}
-for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
-\begin{displaymath}
-  \Mt{U}_{k+1} = [\Mt{U}_k, \ve{p}_{k+1}]
-  \quad
-  \text{and}
-  \quad
-  \Mt{C}_{k+1}
-  =
-  \begin{bmatrix}
-    \Mt{C}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{C}_{k+1},
-\end{displaymath}
-we have
-\begin{displaymath}
-  \Mt{U}_{k+1} \Mt{C}_{k+1}
-  =
-  [\Mt{U}_k, \ve{p}_{k+1}]
-  \begin{bmatrix}
-    \Mt{C}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{C}_{k+1}
-  \\
-  =
-  [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
-\end{displaymath}
-By the inductive hypothesis, expressed as \eqref{eq:1}, 
-\begin{displaymath}
-  [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
-  =
-  [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
-\end{displaymath}
-But
-\begin{displaymath}
-  [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
-  =
-  \M{U}_{k+1}
-\end{displaymath}
-by definition.  Thus
-\begin{displaymath}
-  \M{U}_{k+1} = \Mt{U}_{k+1} \Mt{C}_{k+1},
-\end{displaymath}
-and so the claim holds for $k+1$.
 
-\subsection{Updating the $\M{V}$ matrices}
+% The pertinence of the representation \eqref{eq:2} lies in the following result.
 
-Note that, for each $k \in \N$, 
-\begin{align*}
-  \M{V}_{k+1}
-  &
+\begin{result}
+  \label{res:1}
+  We have
+  \begin{equation}
+    \label{eq:6}
+    \M{X}' = \M{U}' \M{S}' \M{V}'^\T,
+  \end{equation}
+  and this representation is the \emph{thin} SVD of $\M{X}'$.
+\end{result}
+
+Before giving the proof, we make a comment. Since $\M{K}$ is an $(r+1) \times (r+1)$ matrix and $\M{S}$ is a submatrix of $\M{X}$ of rank $r$, the rank of $\M{K}$ is either $r$ or $r+1$. Since
+\begin{displaymath}
+  \det \M{K} = \det \M{S} \cdot 
+  \| \ve{c} - \M{U} \M{U}^\T \ve{c} \| 
+\end{displaymath}
+and since
+\begin{math}
+  \det \M{S} \neq 0,
+\end{math}
+it follows that $\M{K}$ is invertible (that is, $\det \M{K} \neq 0$), and hence of rank $r+1$, if and only if
+\begin{math}
+  \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+\end{math}
+Clearly, the condition
+\begin{math}
+  \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0
+\end{math}
+is equivalent to the condition
+\begin{math}
+  \ve{p} \neq \0.
+\end{math}
+Thus
+\begin{equation}
+  \label{eq:7}
+  k =
+  \begin{cases}
+    r & \text{if $\ve{p} = \0$},
+    \\
+    r + 1 & \text{otherwise}.
+  \end{cases}
+\end{equation}
+
+% Given a matrix $\M{A}$, let $\col(\M{X})$ denote the column space of $\M{A}$. Recalling that by $r$ we denote the rank of $\M{X}$, we have
+% \begin{displaymath}
+%     \rk \M{X}' =
+%     \begin{cases}
+%       r & \text{if $c \in \col(\M{X})$},
+%       \\
+%       r + 1 & \text{otherwise}.
+%     \end{cases}
+%   \end{displaymath}
+%   Moreover, $c \notin \col(\M{X})$ if and only if
+%   \begin{math}
+%     \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+%   \end{math}
+%   We see that $\M{X}'$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
+%   \begin{math}
+%     \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+%   \end{math}
+
+\begin{proof}[Proof of Result~\ref{res:1}]
+  Formula~\eqref{eq:6} follows immediately from combining \eqref{eq:2}, \eqref{eq:3}, and \eqref{eq:4}.  Since $\M{S}'$ is a diagonal matrix with non-zero elements, it remains only show that $\M{U}'$ and $\M{V}' $ have unit-norm, orthogonal columns, that is, 
+  \begin{math}
+    \M{U}'^\T \M{U}' = \M{I}_k
+  \end{math}
+  and
+  \begin{math}
+    \M{V}'^\T \M{V}' = \M{I}_k.
+  \end{math}
+  Note that
+  \begin{equation}
+    \label{eq:8}
+    \begin{split}
+      \M{U}'^\T \M{U}' & = \M{C}^\T [\M{U}, \ve{p}]^\T [\M{U}, \ve{p}] \M{C} = \M{C}^\T
+      \begin{bmatrix}
+        \M{U}^\T \M{U} & \M{U}^T \ve{p} \\
+        \ve{p}^\T \M{U} & \| \ve{p} \|^2
+      \end{bmatrix}
+      \M{C}
+      \\
+      & = \M{C}^\T
+      \begin{bmatrix}
+        \M{I}_r & \M{U}^T \ve{p} \\
+        \ve{p}^\T \M{U} & \| \ve{p} \|^2
+      \end{bmatrix}
+      \M{C}.
+    \end{split}
+  \end{equation}
+  If $\ve{p} = \0$, then, obviously, $\M{U}^\T \ve{p} = \0$.  If $\ve{p} \neq \0$, then
+  \begin{displaymath}
+    \M{U}^T \ve{p}
+    =  \frac{\M{U}^T \ve{c} - \M{U}^T \M{U} \M{U}^\T \ve{c}}
+    {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
+    =
+    \frac{\M{U}^T \ve{c} - \M{I}_r \M{U}^\T \ve{c}}
+    {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
+    =
+    \frac{\M{U}^T \ve{c} - \M{U}^\T \ve{c}}
+    {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
+    =
+    \0.
+  \end{displaymath}
+  Thus in either case $\M{U}^\T \ve{p} = \0$. Moreover, $\ve{p}^\T \M{U} = (\M{U}^\T \ve{p})^\T = \0^T$. Hence
+  \begin{displaymath}
+    \begin{bmatrix}
+      \M{I}_r & \M{U}^T \ve{p} \\
+      \ve{p}^\T \M{U} & \| \ve{p} \|^2
+    \end{bmatrix}
     =
     \begin{bmatrix}
-      \M{V}_k & \0
-      \\
-      \0^T & 1
-    \end{bmatrix}
-             \M{D}_{k+1}
-             =
-             \begin{bmatrix}
+      \M{I}_r & \0 \\
+      \0^\T& \| \ve{p} \|^2
+    \end{bmatrix}.
+  \end{displaymath}
+  We now consider two cases.
+  \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+    \item Suppose that $\ve{p} \neq \0$. Then $\| \ve{p} \| = 1$ and
+    \begin{equation}
+      \label{eq:9}
+      \begin{bmatrix}
+        \M{I}_r & \M{U}^T \ve{p}
+        \\
+        \ve{p}^\T \M{U} & \| \ve{p} \|^2
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T& 0
+      \end{bmatrix}.
+    \end{equation}
+    Moreover,
+    \begin{equation}
+      \label{eq:10}
+      \M{C}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T& 1
+      \end{bmatrix}
+      \M{C}
+      =
+      \M{C}^\T \M{I}_{r+1} \M{C}
+      =
+      \M{C}^\T \M{C}
+      = \M{I}_k.
+    \end{equation}
+    Combining \eqref{eq:8}, \eqref{eq:9}, and \eqref{eq:10}, we see that
+    \begin{math}
+      \M{U}'^\T \M{U'} = \M{I}_k.
+    \end{math}
+  \item Suppose that $\ve{p} = \0$. Then
+    \begin{equation}
+      \label{eq:11}
+      \begin{bmatrix}
+        \M{I}_r & \M{U}^T \ve{p} \\
+        \ve{p}^\T \M{U} & \| \ve{p} \|^2
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^T & 0
+      \end{bmatrix}.
+    \end{equation}
+    Moreover, the matrix $\M{K}$ now becomes
+    \begin{displaymath}
+      \M{K} =
+      \begin{bmatrix}
+        \M{S} & \M{U}^\T \ve{c} \\
+        \0^T & 0
+      \end{bmatrix}.
+    \end{displaymath}
+    Since each column of $\M{K}$ has zero last entry and since the column space of $\M{U}'$ coincides with the column space of $\M{K}$, it follows that each column of $\M{U}'$ has zero last entry. In other words,
+    \begin{equation}
+      \label{eq:12}
+      \M{C}
+      =
+      \begin{bmatrix}
+        \M{C}^{1:r, 1:r}
+        \\
+        \0^T
+      \end{bmatrix}.
+    \end{equation}
+    Consequently,
+    \begin{align*}
+      \M{C}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^T & 0
+      \end{bmatrix}
+               \M{C}
+             & =
+               [(\M{C}^{1:r, 1:r})^\T, \0]
                \begin{bmatrix}
-                 \M{V}_{k-1} & \0
+                 \M{I}_r & \0 \\
+                 \0^T & 0
+               \end{bmatrix}
+                        \begin{bmatrix}
+                          \M{C}^{1:r, 1:r}
+                          \\
+                          \0^T
+                        \end{bmatrix}
+      \\
+                & =
+                  (\M{C}^{1:r, 1:r})^\T   \M{C}^{1:r, 1:r}
+                  =
+                  \M{I}_r.
+    \end{align*} 
+    But $k = r$ in the current case, so
+    \begin{equation}
+      \label{eq:13}
+      \M{C}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^T & 0
+      \end{bmatrix}
+      \M{C}
+      = \M{I}_k.
+    \end{equation}
+    Combining \eqref{eq:8}, \eqref{eq:11}, and \eqref{eq:13}, we conclude that
+    \begin{math}
+      \M{U}'^\T \M{U'} = \M{I}_k.
+    \end{math}
+  \end{enumerate}
+  Thus in either of the considered cases, 
+  \begin{math}
+    \M{U}'^\T \M{U'} = \M{I}_k.
+  \end{math}
+  
+  Next note that
+  \begin{align*}
+    \M{V}'^\T \M{V}'
+    &
+      =
+      \M{D}^\T
+      \begin{bmatrix}
+        \M{V} & \0
+        \\
+        \0^T & 1
+      \end{bmatrix}^\T
+               \begin{bmatrix}
+                 \M{V} & \0
                  \\
                  \0^T & 1
                \end{bmatrix}
-               \M{D}_k & \0
-               \\
-               \0^T & 1
-             \end{bmatrix}
-                      \M{D}_{k+1}
-  \\
-  & =
-    \begin{bmatrix}
+                        \M{D}
+    \\
+    & =
+      \M{D}^\T
       \begin{bmatrix}
-        \M{V}_{k-1} & \0
+        \M{V}^\T & \0
         \\
         \0^T & 1
       \end{bmatrix}
-      & \0
+               \begin{bmatrix}
+                 \M{V} & \0
+                 \\
+                 \0^T & 1
+               \end{bmatrix}
+                        \M{D}
+    \\
+    & =
+      \M{D}^\T
+      \begin{bmatrix}
+        \M{V}^\T \M{V} & \0
+        \\
+        \0^T & 1
+      \end{bmatrix}
+               \M{D}
+    \\
+    & =
+      \M{D}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0
+        \\
+        \0^T & 1
+      \end{bmatrix}
+               \M{D}
+    \\
+    & =
+      \M{D}^\T \M{I}_{r+1} \M{D}
+      = \M{D}^\T \M{D}
+      = \M{I}_k.
+  \end{align*}
+  This completes the proof.
+\end{proof}
+
+Comparing \eqref{eq:3} and \eqref{eq:6}, we see that the SVD of $\M{K}$ and the SVD of $\M{X}'$ share the diagonal part $\M{S}'$.  It follows that $\M{K}$ and $\M{X}'$ have the same rank. Given a matrix $\M{A}$, let $\rk \M{A}$ denotes the rank of and $\M{A}$, and let $\col \M{A}$ denote the column space of $\M{A}$. Recalling that, for a given matrix $\M{A}$, the rank of $\M{A}$ equals the dimension of the column space of $\M{A}$, we readily see that
+\begin{equation}
+  \label{eq:14}
+  \rk \M{X}' =
+  \begin{cases}
+    r & \text{if $c \in \col \M{X}$},
+    \\
+    r + 1 & \text{otherwise}.
+  \end{cases}
+\end{equation}
+Here, let us recall, $r$ denotes the rank of $\M{X}$.  A moment's reflection shows that $c \notin \col \M{X}$ if and only if
+\begin{math}
+  \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+\end{math}
+The latter condition holds if and only if
+\begin{math}
+  \ve{p} \neq \0.
+\end{math}
+Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
+
+
+% We see that $\M{X}'$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
+% \begin{math}
+%   \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+% \end{math}
+
+% We now consider two cases.
+% \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+% \item Suppose that $\rk \M{X}' = r + 1$, or, equivalently, that $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$. Since
+%   \begin{displaymath}
+%     \det \M{K} = \det \M{S} \cdot 
+%     \| \ve{c} - \M{U} \M{U}^\T \ve{c} \| \neq 0,
+%   \end{displaymath}
+%   it follows that $\M{K}$ is invertible, and hence of rank $r + 1$. This implies that $\M{S}'$ has rank $r + 1$, and $\M{C}$ and $\M{D}$ are $(r+1) \times (r+1)$ orthogonal matrices.  Since $[\M{U}, \ve{p}] \in \Mat{p}{(r+1)}$ and
+%   \begin{math}
+%     \left[
+%       \begin{smallmatrix}
+%         \M{V} & \0
+%         \\
+%         \0^T & 1
+%       \end{smallmatrix}
+%     \right] \in \Mat{(q+1)}{(r+1)}
+%   \end{math}
+%   have unit-norm, orthogonal columns, and since $\M{C}$ and $\M{D}$ are orthogonal, it follows that $\M{U}'$ and $\M{V}'$, defined in \eqref{eq:4}, have unit-norm, orthogonal columns. Thus \eqref{eq:6} gives the thin SVD of $\M{X}'$.
+% \item Suppose that $\rk \M{X}' = r$, or, equivalently, that $\ve{p} = 0$. Then
+%   \begin{displaymath}
+%     \M{K} =
+%     \begin{bmatrix}
+%       \M{S} & \M{U}^\T \ve{c} \\
+%       \0^T & 0
+%     \end{bmatrix}.
+%   \end{displaymath}
+%   The rank of $\M{K}$ is $r$, so $\M{S}' \in \Mat{r}{r}$ and $\M{C}, \M{D} \in \Mat{(r+1)}{r}$.  Since the last row of $\M{K}$ is a null vector, it follows that the last row of $\M{C}$ is also a null vector.  Thus
+%   \begin{displaymath}
+%     \M{C}
+%     =
+%     \begin{bmatrix}
+%       \M{C}^{1:r, 1:r}
+%       \\
+%       \0^T
+%     \end{bmatrix},
+%   \end{displaymath}
+%   where $\M{C}^{1:r, 1:r}$ is an $r \times r$ orthogonal matrix. Consequently,
+%   \begin{displaymath}
+%     \M{U}' = [\M{U}, \ve{p}] \M{C}
+%     = [\M{U}, \0]
+%     \begin{bmatrix}
+%       \M{C}^{1:r, 1:r}
+%       \\
+%       \0^T
+%     \end{bmatrix}
+%     = \M{U} \M{C}^{1:r, 1:r}.
+%   \end{displaymath}
+%   Since $\M{D} \in \Mat{(r+1)}{r}$, we have
+%   \begin{displaymath}
+%     \M{D}
+%     =
+%     \begin{bmatrix}
+%       \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix},
+%   \end{displaymath}
+%   and we also have
+%   \begin{displaymath}
+%     \M{V}' =
+%     \begin{bmatrix}
+%       \M{V} & \0
+%       \\
+%       \0^T & 1
+%     \end{bmatrix}
+%     \M{D}
+%     =
+%     \begin{bmatrix}
+%       \M{V} & \0
+%       \\
+%       \0^T & 1
+%     \end{bmatrix}
+%     \begin{bmatrix}
+%       \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}
+%     =
+%     \begin{bmatrix}
+%       \M{V} \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}.
+%   \end{displaymath}
+
+% \end{enumerate}
+
+\subsection{A representation}
+
+Suppose that the matrices $\M{U}$ and $\M{V}$ appearing in \eqref{eq:1} can be represented as
+\begin{equation}
+  \label{eq:15}
+  \M{U} = \Mt{U} \Mt{C},
+ \end{equation}
+ where $\Mt{U} \in \Mat{p}{r}$ and $\Mt{C} \in \Mat{r}{r}$, and
+\begin{equation}
+  \label{eq:16}
+  \M{V} = \Mt{V} \Mt{D}, 
+ \end{equation}
+ where $\Mt{V} \in \Mat{q}{r}$ and $\Mt{D} \in \Mat{r}{r}$.  Then, as it turns out, the matrices $\M{U}'$ and $\M{V}'$ given in \eqref{eq:4} and \eqref{eq:5} can also be represented in a similar fashion as
+\begin{equation}
+  \label{eq:17}
+  \M{U}' = \Mt{U}' \Mt{C}', 
+\end{equation}
+where $\Mt{U}' \in \Mat{p}{k}$ and $\Mt{C}' \in \Mat{k}{k}$, and
+\begin{equation}
+  \label{eq:18}
+  \M{V}' = \Mt{V}' \Mt{D}', 
+\end{equation}
+where $\Mt{V}' \in \Mat{q}{k}$ and $\Mt{D}' \in \Mat{k}{k}$.  The explicit formulae for $\Mt{U}'$, $\Mt{C}'$, $\Mt{V}'$, and $\Mt{D}'$, which we shall derive next, are intended to be used iteratively to obtain an expression for the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix. In this target scenario, the matrices $\M{U}$ and $\M{V}$ corresponding to the initial matrix are represented as $\M{U} = \Mt{U} \Mt{C}$ and $\M{V} = \Mt{V} \Mt{D}$, where $\Mt{U} = \M{U}$, $\Mt{C} = \M{I}_r$, $\Mt{V} = \M{V}$, and $\Mt{D} = \M{I}_r$.
+
+\subsubsection{Representing $\M{U}'$}
+
+We consider two cases.
+
+\begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+\item Suppose that $\ve{p} \neq \0$ (or, equivalently, that $k= r + 1$). Then, in view \eqref{eq:4} and \eqref{eq:15},
+\begin{displaymath}
+  \M{U}' = [\M{U}, \ve{p}] \M{C} = [\Mt{U} \Mt{C}, \ve{p}] \M{C}
+  =
+  [\Mt{U}, \ve{p}]
+  \begin{bmatrix}
+    \Mt{C} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{C}.
+\end{displaymath}
+We now obtain the desired representation 
+\begin{math}
+  \M{U}' = \Mt{U}' \Mt{C}'
+\end{math}
+upon letting
+\begin{displaymath}
+  \Mt{U}' = [\Mt{U}, \ve{p}]
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}' =
+  \begin{bmatrix}
+    \Mt{C} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{C}.
+\end{displaymath}
+\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$). Then, in view of \eqref{eq:4} and \eqref{eq:12},
+\begin{displaymath}
+  \M{U}' = [\M{U}, \ve{p}] \M{C}
+  = [\M{U}, \0]
+  \begin{bmatrix}
+    \M{C}^{1:r, 1:r}
+    \\
+    \0^T
+  \end{bmatrix}
+  = \M{U} \M{C}^{1:r, 1:r}
+  = \Mt{U} \Mt{C}  \M{C}^{1:r, 1:r}.
+\end{displaymath}
+This leads to the representation
+\begin{math}
+  \M{U}' = \Mt{U}' \Mt{C}'
+\end{math}
+upon letting
+\begin{displaymath}
+  \Mt{U}' =  \Mt{U}
+  \quad
+  \text{and}
+  \quad
+  \Mt{C}' = \Mt{C}  \M{C}^{1:r, 1:r}.
+\end{displaymath}
+\end{enumerate}
+
+\subsubsection{Representing $\M{V}'$}
+
+We consider two cases.
+
+\begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+\item Suppose that $\ve{p} \neq \0$ (or, equivalently, that $k= r + 1$).  Then
+\begin{displaymath}
+  \M{V}' =
+  \begin{bmatrix}
+    \M{V} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}
+  =
+  \begin{bmatrix}
+    \Mt{V} \Mt{D} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}
+  =
+  \begin{bmatrix}
+    \Mt{V} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Mt{D} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}.
+\end{displaymath}
+Accordingly, we obtain the representation
+\begin{math}
+  \M{V}' = \Mt{V}' \Mt{D}'
+\end{math}
+upon letting
+\begin{displaymath}
+  \Mt{V}' =
+  \begin{bmatrix}
+    \Mt{V} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}' =
+  \begin{bmatrix}
+    \Mt{D} & \0
+    \\
+    \0^T & 1
+  \end{bmatrix}
+  \M{D}.
+\end{displaymath}
+\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$).  Then $\M{D} \in \Mat{(r+1)}{r}$, and we have
+  \begin{displaymath}
+    \M{D}
+    =
+    \begin{bmatrix}
+      \M{D}^{1:r,1:r}
+      \\
+      \M{D}^{r+1,1:r}
+    \end{bmatrix}.
+  \end{displaymath}
+  Now, by \eqref{eq:5}, 
+  \begin{displaymath}
+    \M{V}' =
+    \begin{bmatrix}
+      \M{V} & \0
       \\
       \0^T & 1
     \end{bmatrix}
-             \begin{bmatrix}
-               \M{D}_k & \0
-               \\
-               \0^\T & 1
-             \end{bmatrix}
-                       \M{D}_{k+1}.
-\end{align*}
-This equality suggests that we introduce, inductively, the following matrices:
-\begin{displaymath}
-  \Mt{V}_1
-  =
-  \begin{bmatrix}
-    \M{V}_0 & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \quad
-  \text{and}
-  \quad
-  \Mt{D}_1 = \M{D}_1,
-\end{displaymath}
-and, for each positive integer $k$ greater than 1, 
-\begin{displaymath}
-  \Mt{V}_k
-  =
-  \begin{bmatrix}
-    \Mt{V}_{k-1} & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-            \
-            \left(=
-            \begin{bmatrix}
-              \M{V}_0 & \0 & \0 & \0 & \cdots & \0
-              \\
-              \0^\T & 1 & 0 &  0 & \cdots & 0
-              \\
-              \0^\T & 0 & 1 & 0 & \cdots & 0
-              \\
-              \vdots & \vdots & \vdots & \ddots & & \vdots 
-              \\
-              \vdots & \vdots & \vdots & & \ddots & \vdots 
-              \\
-              \0^\T & \undermat{\text{$k$ columns}}{0 & 0 & 0 & \cdots & 1}
-            \end{bmatrix}
-                                           \right)
-\end{displaymath}
-and
-\begin{displaymath}
-  \Mt{D}_k
-  =
-  \begin{bmatrix}
-    \Mt{D}_{k-1} & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_k.
-\end{displaymath}
-We claim that
-\begin{equation}
-  \label{eq:2}
-  \M{V}_k = \Mt{V}_k \Mt{D}_k
-\end{equation}
-for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
-\begin{displaymath}
-   \Mt{V}_{k+1}
-  =
-  \begin{bmatrix}
-    \Mt{V}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \quad
-  \text{and}
-  \quad
-  \Mt{D}_{k+1}
-  =
-  \begin{bmatrix}
-    \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1},
-\end{displaymath}
-we have
-\begin{displaymath}
-  \Mt{V}_{k+1} \Mt{D}_{k+1}
-  =
-   \begin{bmatrix}
-    \Mt{V}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \begin{bmatrix}
-    \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}
-  \\
-  =
-  \begin{bmatrix}
-     \Mt{V}_k \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}.
-\end{displaymath}
-By the inductive hypothesis, expressed as \eqref{eq:2}, 
-\begin{displaymath}
-  \begin{bmatrix}
-     \Mt{V}_k \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}
-  =
-  \begin{bmatrix}
-     \M{V}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}.
-\end{displaymath}
-But
-\begin{displaymath}
-  \begin{bmatrix}
-     \M{V}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}
-  =
-  \M{V}_{k+1}
-\end{displaymath}
-by definition.  Thus
-\begin{displaymath}
-  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1},
-\end{displaymath}
-and so the claim holds for $k+1$.
-
-\subsection{Updating when the rank does not increase}
-
-\subsubsection{Description}
-
-For each $n \in \N$, let $r_n$ denote the rank of $\M{K}_n$. Suppose that $k \in \N$ is such that $r_{k+1} = r_k$. Then the unreduced SVD of $\M{K}_{k+1}$ takes the form
-\begin{displaymath}
-  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1} \M{D}^\T_{k+1},
-\end{displaymath}
-where
+    \M{D}
+    =
+    \begin{bmatrix}
+      \M{V} & \0
+      \\
+      \0^T & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      \M{D}^{1:r,1:r}
+      \\
+      \M{D}^{r+1,1:r}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      \M{V} \M{D}^{1:r,1:r}
+      \\
+      \M{D}^{r+1,1:r}
+    \end{bmatrix}.
+  \end{displaymath}
+Furthermore, in view of \eqref{eq:16},  
 \begin{align*}
-  \M{C}_{k+1}
+  % \M{V}'
+  % & =
+    \begin{bmatrix}
+      \M{V} \M{D}^{1:r,1:r}
+      \\
+      \M{D}^{r+1,1:r}
+    \end{bmatrix}
   & =
   \begin{bmatrix}
-    \M{C}^{1:r_k, 1:r_k}_{k+1} & \0
+    \Mt{V} \Mt{D} \M{D}^{1:r,1:r}
     \\
-    \0^\T & 1
-  \end{bmatrix},
-  \\[2ex]
-  \M{S}_{k+1}
-  & =
-    \diag(s_{1,k+1}, \dots, s_{r_k,k+1}, 0),
-  \\[2ex]
-  \M{D}_{k+1}
+    \M{D}^{r+1,1:r}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \Mt{V} \Mt{D} \M{D}^{1:r, 1:r}
+    \\
+    \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+ \Mt{D} \M{D}^{1:r, 1:r}
+  \end{bmatrix}
+  \\
   & =
     \begin{bmatrix}
-      \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
+      \Mt{V}
       \\
-      \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
-    \end{bmatrix}.
+      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+    \end{bmatrix}
+  \Mt{D} \M{D}^{1:r, 1:r}.
 \end{align*}
-The matrix $\M{K}_{k+1}$ admits also an SVD in reduced form, namely
+This leads to the representation
+\begin{math}
+  \M{V}' =  \Mt{V}' \Mt{D}'
+\end{math}
+upon letting
 \begin{displaymath}
-  \M{K}_{k+1} = \Mr{C}_{k+1} \Mr{S}_{k+1} (\Mr{D}_{k+1})^\T,
-\end{displaymath}
-where
-\begin{align*}
-  \Mr{C}_{k+1}
-  & =
+  \Mt{V}' =
   \begin{bmatrix}
-    \M{C}^{1:r_k, 1:r_k}_{k+1} 
+    \Mt{V}
     \\
-    \0^\T 
-  \end{bmatrix},
-  \\[2ex]
-  \Mr{S}_{k+1}
-  & =
-    \diag(s_{1,k+1}, \dots, s_{r_k,k+1}),
-  \\[2ex]
-  \Mr{D}_{k+1}
-  & =
-    \begin{bmatrix}
-      \M{D}^{1:r_k, 1:r_k}_{k+1} 
-      \\
-      \M{D}^{r_k+1, 1:r_k}_{k+1} 
-    \end{bmatrix}.
-\end{align*}
-Exploiting the latter representation, one can show that if we adopt
-\begin{displaymath}
-  \Mt{U}_{k+1} =  \Mt{U}_k
-  \quad
-  \text{and}
-  \quad
-  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, 1:r_k}_{k+1}
-\end{displaymath}
-for an update rule for the matrices $\Mt{U}_k$ and $\Mt{C}_k$, and if we adopt 
-\begin{displaymath}
-  \Mt{V}_{k+1}
-  =
-  \begin{bmatrix}
-    \Mt{V}_k
-    \\
-   \M{D}^{r_k+1, 1:r_k}_{k+1}  
-    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+    \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
   \end{bmatrix}
   \quad
   \text{and}
   \quad
-  \Mt{D}_{k+1}
-  =
-    \Mt{D}_k
-  \M{D}^{1:r_k,1:r_k}_{k+1}
+  \Mt{D}' =
+  \Mt{D} \M{D}^{1:r, 1:r}.
 \end{displaymath}
-for an update rule for the matrices $\Mt{V}_k$ and $\Mt{D}_k$, then
-the SVD of $\M{X}_{k+1}$ is given by
-\begin{displaymath}
-  \M{X}_{k+1} = \Mt{C}_{k+1} \Mr{S}_{k+1} \Mt{D}^\T_{k+1}.
-\end{displaymath}
+\end{enumerate}
 
-\subsubsection{Explanation}
+\subsection{Iterative updating}
 
-\begin{align*}
-  \begin{bmatrix}
-    \Mt{V}_k \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-            \M{D}_{k+1}
-          & =
-            \begin{bmatrix}
-              \Mt{V}_k \Mt{D}_k & \0
-              \\
-              \0^\T & 1
-            \end{bmatrix}
-                      \begin{bmatrix}
-                        \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
-                        \\
-                        \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
-                      \end{bmatrix}
-  \\
-                      & =
-                        \begin{bmatrix}
-                          \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-                          &
-                           \Mt{V}_k \Mt{D}_k \M{D}^{r_k+1, 1:r_k}_{k+1} 
-                          \\
-                          \M{D}^{r_k+1, 1:r_k}_{k+1}
-                          &
-                          \M{D}^{r_k+1, r_k+1}_{k+1}
-                        \end{bmatrix}
-\end{align*}
-Deleting the last column, we obtain the matrix
-\begin{displaymath}
-  \begin{bmatrix}
-    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-    \\
-    \M{D}^{r_k+1, 1:r_k}_{k+1}
-  \end{bmatrix},
-\end{displaymath}
-which we represent as
-\begin{align*}
-  \begin{bmatrix}
-    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-    \\
-    \M{D}^{r_k+1, 1:r_k}_{k+1}
-  \end{bmatrix}
-  & =
-  \begin{bmatrix}
-    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-    \\
-    \M{D}^{r_k+1, 1:r_k}_{k+1}
-  \end{bmatrix}
-  \\
-  & =
-  \begin{bmatrix}
-    \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-    \\
-    \M{D}^{r_k+1, 1:r_k}_{k+1}
-    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
-    \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-  \end{bmatrix}
-   \\
-  & =
-    \underbrace{%
-  \begin{bmatrix}
-    \Mt{V}_k
-    \\
-    \M{D}^{r_k+1, 1:r_k}_{k+1}
-    \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
-  \end{bmatrix}
-  }_{\Mt{V}_{k+1}}
-  \underbrace{%
-  \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
-  }_{\Mt{D}_{k+1}}.
-\end{align*}
+We are now in a position to present an algorithm for calculating the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix.
+
+\begin{algorithm}[\textnormal{\textsc{ThinSVD}($[\M{X}, \ve{c}_1, \dots, \ve{c}_K]$)}]
+  \rule{\textwidth}{0.4pt}
+  \begin{algorithmic}[1]
+    \Require $\M{X} \in \Mat{p}{q}, \ve{c}_1 \in \R^p, \dots, \ve{c}_K \in \R^p$
+    \State $(\M{U}, \M{S}, \M{V}) \gets \textsc{ThinSVD}(\M{X})$
+    \State $r \gets \textsc{Order}(\M{S})$
+    \State $\Mt{U} \gets \M{U}$
+    \State $\Mt{C} \gets \M{I}_r$
+    \State $\Mt{V} \gets \M{V}$
+    \State $\Mt{D} \gets \M{I}_r$
+    \For{$k \gets 1 \ldots K$}
+    \If {$\ve{c}_k - \M{U}\M{U}^\T \ve{c}_k \neq \0$ }
+    \State $\ve{p} \gets \frac{\ve{c}_k - \M{U}\M{U}^\T \ve{c}_k}{\| \ve{c}_k - \M{U}\M{U}^\T \ve{c}_k\|} $
+    \Else
+    \State $\ve{p} \gets \0$
+    \EndIf
+    \State  
+    \begin{math}
+      \M{K}
+      \gets
+      \begin{bmatrix}
+        \M{S} & \M{U}^\T \ve{c}_k \\
+        \0^T & \| \ve{c}_k - \M{U} \M{U}^\T \ve{c}_k \|
+      \end{bmatrix}
+    \end{math}
+    \State
+    $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
+    \If {$\ve{p} \neq \0$}
+    \State
+    \begin{math}
+      \Mt{U} \gets [\Mt{U}, \ve{p}]
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \begin{bmatrix}
+        \Mt{C} & \0
+        \\
+        \0^\T & 1
+      \end{bmatrix}
+      \M{C}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{V}
+      \gets
+      \begin{bmatrix}
+        \Mt{V} & \0
+        \\
+        \0^T & 1
+      \end{bmatrix} 
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{D}
+      \gets
+      \begin{bmatrix}
+        \Mt{D} & \0
+        \\
+        \0^T & 1
+      \end{bmatrix}
+      \M{D}
+    \end{math}
+    \Else
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \Mt{C}  \M{C}^{1:r, 1:r}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{V}'
+      \gets
+      \begin{bmatrix}
+        \Mt{V}
+        \\
+        \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+      \end{bmatrix}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{D}'
+      \gets
+      \Mt{D} \M{D}^{1:r, 1:r}.
+    \end{math}
+    \EndIf
+    \State
+    \begin{math}
+      \M{S} \gets \M{S}'
+    \end{math}
+    \State
+    \begin{math}
+      r \gets \textsc{Order}(\M{S})
+    \end{math}
+    \EndFor
+    \State
+    \begin{math}
+      \M{U} \gets \Mt{U} \Mt{C}
+    \end{math}
+    \State
+    \begin{math}
+      \M{V} \gets \Mt{V} \Mt{D}
+    \end{math}
+    \State
+    \Return $(\M{U}, \M{S}, \M{V})$
+  \end{algorithmic}
+\end{algorithm}
+
+% \subsection{A representation}
+
+% \begin{displaymath}
+%   \M{U} = \Mt{U} \Mt{C}
+% \end{displaymath}
+
+% Suppose that $\ve{p} \neq \0$. Note that
+% \begin{displaymath}
+%   [\Mt{U} \Mt{C}, \ve{p}]
+%   =
+%   [\Mt{U}, \ve{p}]
+%   \begin{bmatrix}
+%     \Mt{C} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}.
+% \end{displaymath}
+% Therefore
+% \begin{displaymath}
+%   \M{U}' = [\M{U}, \ve{p}] \M{C} = [\Mt{U} \Mt{C}, \ve{p}] \M{C}
+%   =
+%   [\Mt{U}, \ve{p}]
+%   \begin{bmatrix}
+%     \Mt{C} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{C}
+% \end{displaymath}
+% Let
+% \begin{displaymath}
+%   \Mt{U}' = [\Mt{U}, \ve{p}]
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}' =
+%   \begin{bmatrix}
+%     \Mt{C} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{C}.
+% \end{displaymath}
+% Then
+% \begin{displaymath}
+%   \M{U}' = \Mt{U}' \Mt{C}'
+% \end{displaymath}
+
+% Suppose that $\ve{p} = \0$. Then
+% \begin{displaymath}
+%   \M{U}' = [\M{U}, \ve{p}] \M{C}
+%   = [\M{U}, \0]
+%   \begin{bmatrix}
+%     \M{C}^{1:r, 1:r}
+%     \\
+%     \0^T
+%   \end{bmatrix}
+%   = \M{U} \M{C}^{1:r, 1:r}
+%   = \Mt{U} \Mt{C}  \M{C}^{1:r, 1:r}
+% \end{displaymath}
+% Let
+% \begin{displaymath}
+%   \Mt{U}' =  \Mt{U}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}' = \Mt{C}  \M{C}^{1:r, 1:r}
+% \end{displaymath}
+% Then
+% \begin{displaymath}
+%   \M{U}' = \Mt{U}' \Mt{C}'
+% \end{displaymath}
+
+% \subsection{Another representation}
+
+% \begin{displaymath}
+%   \M{V} = \Mt{V} \Mt{D}
+% \end{displaymath}
+
+% Suppose that $\ve{p} \neq \0$. Then
+% \begin{displaymath}
+%   \M{V}' =
+%   \begin{bmatrix}
+%     \M{V} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \begin{bmatrix}
+%     \Mt{D} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}
+% \end{displaymath}
+% Let
+% \begin{displaymath}
+%   \Mt{V}' =
+%   \begin{bmatrix}
+%     \Mt{V} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{D}' =
+%   \begin{bmatrix}
+%     \Mt{D} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}.
+% \end{displaymath}
+% Then
+% \begin{displaymath}
+%   \M{V}' = \Mt{V}' \Mt{D}'.
+% \end{displaymath}
+
+% Suppose that $\ve{p} = \0$. Then
+% \begin{align*}
+%   \M{V}'
+%   & =
+%     \begin{bmatrix}
+%       \M{V} \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} \M{D}^{1:r,1:r}
+%     \\
+%     \M{D}^{r+1,1:r}
+%   \end{bmatrix}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} \M{D}^{1:r, 1:r}
+%     \\
+%     \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+ \Mt{D} \M{D}^{1:r, 1:r}
+%   \end{bmatrix}
+%   \\
+%   & =
+%     \begin{bmatrix}
+%       \Mt{V}
+%       \\
+%       \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+%     \end{bmatrix}
+%   \Mt{D} \M{D}^{1:r, 1:r}.
+% \end{align*}
+% Let
+% \begin{displaymath}
+%   \Mt{V}' =
+%   \begin{bmatrix}
+%     \Mt{V}
+%     \\
+%     \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+%   \end{bmatrix}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{D}' =
+%   \Mt{D} \M{D}^{1:r, 1:r}.
+% \end{displaymath}
+% Then
+% \begin{displaymath}
+%   \M{V}' =  \Mt{V}' \Mt{D}'.
+% \end{displaymath}
+ 
+
+% \subsection{The Iterative Process}
+
+% Let
+% \begin{displaymath}
+%   \M{X}_0 = \M{U}_0 \M{S}_0 \M{V}_0^\T.
+% \end{displaymath}
+% Then
+% \begin{displaymath}
+%   \M{X}_1
+%   = [\M{U}_0, \ve{p}_1] \M{K}_1
+%   \begin{bmatrix}
+%     \M{V}_0 & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}^\T = [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T
+%   \begin{bmatrix}
+%     \M{V}_0 & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}^\T.
+% \end{displaymath}
+% With
+% \begin{displaymath}
+%   \M{U}_1 =  [\M{U}_0, \ve{p}_1] \M{C}_1
+%   \quad
+%   \text{and}
+%   \quad
+%   \M{V}_1 =
+%   \begin{bmatrix}
+%     \M{V}_0 & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}_1,
+% \end{displaymath}
+% we have
+% \begin{displaymath}
+%   \M{X}_1 =   \M{U}_1 \M{S}_1 \M{V}_1^\T.
+% \end{displaymath}
+% Generally, for any $k \in \N$,
+% \begin{displaymath}
+%   \M{X}_k
+%   =
+%   [\M{U}_{k-1}, \ve{p}_k] \M{K}_k
+%   \begin{bmatrix}
+%     \M{V}_{k-1} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}^\T = [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T
+%   \begin{bmatrix}
+%     \M{V}_{k-1} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}^\T,
+% \end{displaymath}
+% and with
+% \begin{displaymath}
+%   \M{U}_k =  [\M{U}_{k-1}, \ve{p}_k] \M{C}_k
+%   \quad
+%   \text{and}
+%   \quad
+%   \M{V}_k
+%   =
+%   \begin{bmatrix}
+%     \M{V}_{k-1} & \0
+%     \\
+%     \0^T & 1
+%   \end{bmatrix}
+%   \M{D}_k,
+% \end{displaymath}
+% we have
+% \begin{displaymath}
+%   \M{X}_k =  \M{U}_k \M{S}_k \M{V}_k^\T.
+% \end{displaymath}
+
+% \subsection{Updating the $\M{U}$ matrices}
+
+% Note that, for each $k \in \N$,
+% \begin{align*}
+%   \M{U}_{k+1}
+%   &
+%     = [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+%     =  [[\M{U}_{k-1}, \ve{p}_k] \M{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+%   \\
+%   &
+%     =
+%     \left[
+%     [\M{U}_{k-1}, \ve{p}_k], \ve{p}_{k+1}
+%     \right]
+%     \begin{bmatrix}
+%       \M{C}_k & \0
+%       \\
+%       \0^\T & 1
+%     \end{bmatrix}
+%               \M{C}_{k+1}.
+% \end{align*}
+% This equality inspires us to introduce, inductively, the following matrices:
+% \begin{displaymath}
+%   \Mt{U}_1 = [\M{U}_0, \ve{p}_1]
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}_1 = \M{C}_1,
+% \end{displaymath}
+% and, for each positive integer $k$ greater than 1,
+% \begin{displaymath}
+%   \Mt{U}_k
+%   =
+%   [ \Mt{U}_{k-1},  \ve{p}_k]
+%   \
+%   (
+%   = 
+%   [\M{U}_0, \ve{p}_1, \dots, \ve{p}_k]
+%   )
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}_k
+%   =
+%   \begin{bmatrix}
+%     \Mt{C}_{k-1} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{C}_k.
+% \end{displaymath}
+% We claim that
+% \begin{equation}
+%   \label{eq:19}
+%   \M{U}_k = \Mt{U}_k \Mt{C}_k
+% \end{equation}
+% for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
+% \begin{displaymath}
+%   \Mt{U}_{k+1} = [\Mt{U}_k, \ve{p}_{k+1}]
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \Mt{C}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{C}_{k+1},
+% \end{displaymath}
+% we have
+% \begin{displaymath}
+%   \Mt{U}_{k+1} \Mt{C}_{k+1}
+%   =
+%   [\Mt{U}_k, \ve{p}_{k+1}]
+%   \begin{bmatrix}
+%     \Mt{C}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{C}_{k+1}
+%   \\
+%   =
+%   [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
+% \end{displaymath}
+% By the inductive hypothesis, expressed as \eqref{eq:19},
+% \begin{displaymath}
+%   [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+%   =
+%   [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
+% \end{displaymath}
+% But
+% \begin{displaymath}
+%   [\M{U}_k, \ve{p}_{k+1}] \M{C}_{k+1}
+%   =
+%   \M{U}_{k+1}
+% \end{displaymath}
+% by definition.  Thus
+% \begin{displaymath}
+%   \M{U}_{k+1} = \Mt{U}_{k+1} \Mt{C}_{k+1},
+% \end{displaymath}
+% and so the claim holds for $k+1$.
+
+% \subsection{Updating the $\M{V}$ matrices}
+
+% Note that, for each $k \in \N$,
+% \begin{align*}
+%   \M{V}_{k+1}
+%   &
+%     =
+%     \begin{bmatrix}
+%       \M{V}_k & \0
+%       \\
+%       \0^T & 1
+%     \end{bmatrix}
+%              \M{D}_{k+1}
+%              =
+%              \begin{bmatrix}
+%                \begin{bmatrix}
+%                  \M{V}_{k-1} & \0
+%                  \\
+%                  \0^T & 1
+%                \end{bmatrix}
+%                \M{D}_k & \0
+%                \\
+%                \0^T & 1
+%              \end{bmatrix}
+%                       \M{D}_{k+1}
+%   \\
+%   & =
+%     \begin{bmatrix}
+%       \begin{bmatrix}
+%         \M{V}_{k-1} & \0
+%         \\
+%         \0^T & 1
+%       \end{bmatrix}
+%       & \0
+%       \\
+%       \0^T & 1
+%     \end{bmatrix}
+%              \begin{bmatrix}
+%                \M{D}_k & \0
+%                \\
+%                \0^\T & 1
+%              \end{bmatrix}
+%                        \M{D}_{k+1}.
+% \end{align*}
+% This equality suggests that we introduce, inductively, the following matrices:
+% \begin{displaymath}
+%   \Mt{V}_1
+%   =
+%   \begin{bmatrix}
+%     \M{V}_0 & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{D}_1 = \M{D}_1,
+% \end{displaymath}
+% and, for each positive integer $k$ greater than 1,
+% \begin{displaymath}
+%   \Mt{V}_k
+%   =
+%   \begin{bmatrix}
+%     \Mt{V}_{k-1} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \
+%   \left(=
+%     \begin{bmatrix}
+%       \M{V}_0 & \0 & \0 & \0 & \cdots & \0
+%       \\
+%       \0^\T & 1 & 0 & 0 & \cdots & 0
+%       \\
+%       \0^\T & 0 & 1 & 0 & \cdots & 0
+%       \\
+%       \vdots & \vdots & \vdots & \ddots & & \vdots
+%       \\
+%       \vdots & \vdots & \vdots & & \ddots & \vdots
+%       \\
+%       \0^\T & \undermat{\text{$k$ columns}}{0 & 0 & 0 & \cdots & 1}
+%     \end{bmatrix}
+%   \right)
+% \end{displaymath}
+% and
+% \begin{displaymath}
+%   \Mt{D}_k
+%   =
+%   \begin{bmatrix}
+%     \Mt{D}_{k-1} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_k.
+% \end{displaymath}
+% We claim that
+% \begin{equation}
+%   \label{eq:20}
+%   \M{V}_k = \Mt{V}_k \Mt{D}_k
+% \end{equation}
+% for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
+% \begin{displaymath}
+%   \Mt{V}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{D}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \Mt{D}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1},
+% \end{displaymath}
+% we have
+% \begin{displaymath}
+%   \Mt{V}_{k+1} \Mt{D}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \begin{bmatrix}
+%     \Mt{D}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1}
+%   \\
+%   =
+%   \begin{bmatrix}
+%     \Mt{V}_k \Mt{D}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1}.
+% \end{displaymath}
+% By the inductive hypothesis, expressed as \eqref{eq:20},
+% \begin{displaymath}
+%   \begin{bmatrix}
+%     \Mt{V}_k \Mt{D}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \M{V}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1}.
+% \end{displaymath}
+% But
+% \begin{displaymath}
+%   \begin{bmatrix}
+%     \M{V}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}_{k+1}
+%   =
+%   \M{V}_{k+1}
+% \end{displaymath}
+% by definition.  Thus
+% \begin{displaymath}
+%   \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1},
+% \end{displaymath}
+% and so the claim holds for $k+1$.
+
+% \subsection{Updating when the rank does not increase}
+
+% \subsubsection{Description}
+
+% For each $n \in \N$, let $r_n$ denote the rank of $\M{K}_n$. Suppose that $k \in \N$ is such that $r_{k+1} = r_k$. Then the unreduced SVD of $\M{K}_{k+1}$ takes the form
+% \begin{displaymath}
+%   \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1} \M{D}^\T_{k+1},
+% \end{displaymath}
+% where
+% \begin{align*}
+%   \M{C}_{k+1}
+%   & =
+%     \begin{bmatrix}
+%       \M{C}^{1:r_k, 1:r_k}_{k+1} & \0
+%       \\
+%       \0^\T & 1
+%     \end{bmatrix},
+%   \\[2ex]
+%   \M{S}_{k+1} & = \diag(s_{1,k+1}, \dots, s_{r_k,k+1}, 0),
+%   \\[2ex]
+%   \M{D}_{k+1} & =
+%                 \begin{bmatrix}
+%                   \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
+%                   \\
+%                   \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
+%                 \end{bmatrix}.
+% \end{align*}
+% The matrix $\M{K}_{k+1}$ admits also an SVD in reduced form, namely
+% \begin{displaymath}
+%   \M{K}_{k+1} = \Mr{C}_{k+1} \Mr{S}_{k+1} (\Mr{D}_{k+1})^\T,
+% \end{displaymath}
+% where
+% \begin{align*}
+%   \Mr{C}_{k+1}
+%   & =
+%     \begin{bmatrix}
+%       \M{C}^{1:r_k, 1:r_k}_{k+1}
+%       \\
+%       \0^\T
+%     \end{bmatrix},
+%   \\[2ex]
+%   \Mr{S}_{k+1} & = \diag(s_{1,k+1}, \dots, s_{r_k,k+1}),
+%   \\[2ex]
+%   \Mr{D}_{k+1} & =
+%                  \begin{bmatrix}
+%                    \M{D}^{1:r_k, 1:r_k}_{k+1}
+%                    \\
+%                    \M{D}^{r_k+1, 1:r_k}_{k+1}
+%                  \end{bmatrix}.
+% \end{align*}
+% Exploiting the latter representation, one can show that if we adopt
+% \begin{displaymath}
+%   \Mt{U}_{k+1} =  \Mt{U}_k
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, 1:r_k}_{k+1}
+% \end{displaymath}
+% for an update rule for the matrices $\Mt{U}_k$ and $\Mt{C}_k$, and if we adopt
+% \begin{displaymath}
+%   \Mt{V}_{k+1}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V}_k
+%     \\
+%     \M{D}^{r_k+1, 1:r_k}_{k+1} \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+%   \end{bmatrix}
+%   \quad
+%   \text{and}
+%   \quad
+%   \Mt{D}_{k+1}
+%   =
+%   \Mt{D}_k
+%   \M{D}^{1:r_k,1:r_k}_{k+1}
+% \end{displaymath}
+% for an update rule for the matrices $\Mt{V}_k$ and $\Mt{D}_k$, then the SVD of $\M{X}_{k+1}$ is given by
+% \begin{displaymath}
+%   \M{X}_{k+1} = \Mt{C}_{k+1} \Mr{S}_{k+1} \Mt{D}^\T_{k+1}.
+% \end{displaymath}
+
+% \subsubsection{Explanation}
+
+% \begin{align*}
+%   \begin{bmatrix}
+%     \Mt{V}_k \Mt{D}_k & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%             \M{D}_{k+1}
+%           & =
+%             \begin{bmatrix}
+%               \Mt{V}_k \Mt{D}_k & \0
+%               \\
+%               \0^\T & 1
+%             \end{bmatrix}
+%                       \begin{bmatrix}
+%                         \M{D}^{1:r_k, 1:r_k}_{k+1} & \M{D}^{1:r_k, r_k+1}_{k+1}
+%                         \\
+%                         \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
+%                       \end{bmatrix}
+%   \\
+%                       & =
+%                         \begin{bmatrix}
+%                           \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1} & \Mt{V}_k \Mt{D}_k \M{D}^{r_k+1, 1:r_k}_{k+1}
+%                           \\
+%                           \M{D}^{r_k+1, 1:r_k}_{k+1} & \M{D}^{r_k+1, r_k+1}_{k+1}
+%                         \end{bmatrix}
+% \end{align*}
+% Deleting the last column, we obtain the matrix
+% \begin{displaymath}
+%   \begin{bmatrix}
+%     \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%     \\
+%     \M{D}^{r_k+1, 1:r_k}_{k+1}
+%   \end{bmatrix},
+% \end{displaymath}
+% which we represent as
+% \begin{align*}
+%   \begin{bmatrix}
+%     \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%     \\
+%     \M{D}^{r_k+1, 1:r_k}_{k+1}
+%   \end{bmatrix}
+%   & =
+%     \begin{bmatrix}
+%       \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%       \\
+%       \M{D}^{r_k+1, 1:r_k}_{k+1}
+%     \end{bmatrix}
+%   \\
+%   & =
+%     \begin{bmatrix}
+%       \Mt{V}_k \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%       \\
+%       \M{D}^{r_k+1, 1:r_k}_{k+1} \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+ \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%     \end{bmatrix}
+%   \\
+%   & =
+%     \underbrace{%
+%     \begin{bmatrix}
+%       \Mt{V}_k
+%       \\
+%       \M{D}^{r_k+1, 1:r_k}_{k+1} \left(\Mt{D}_k \M{D}^{1:r_k,1:r_k}_{k+1}\right)^+
+%     \end{bmatrix}
+%   }_{\Mt{V}_{k+1}}
+%   \underbrace{%
+%   \Mt{D}_k \M{D}^{1:r_k, 1:r_k}_{k+1}
+%   }_{\Mt{D}_{k+1}}.
+% \end{align*}
 
 \section{Downdating}
 
@@ -825,12 +1895,11 @@ Let $\M{X}_0$ be a $p \times q$ matrix, and let
 \begin{displaymath}
   \M{X}_0 = \M{U}_0 \M{S}_0 \M{V}_0^\T
 \end{displaymath}
-be the SVD of $\M{X}_0$.
-For $1 \leq k \leq q$, let $\M{X}_k$ be the matrix obtained from $\M{X}_0$ by deleting the last $k$ columns,
+be the SVD of $\M{X}_0$.  For $1 \leq k \leq q$, let $\M{X}_k$ be the matrix obtained from $\M{X}_0$ by deleting the last $k$ columns,
 \begin{displaymath}
   \M{X}_k = \M{X}_0^{:,1:(q -k)}.
 \end{displaymath}
-Let 
+Let
 \begin{displaymath}
   \M{X}_k = \M{U}_k \M{S}_k\M{V}_k^\T
 \end{displaymath}
@@ -871,8 +1940,7 @@ We consider two cases.
         \ve{n}_1
         \\
         \sqrt{1 - \| \ve{n}_1 \|^2}
-      \end{bmatrix}^\T
-    \right).
+      \end{bmatrix}^\T \right).
   \end{displaymath}
   Let
   \begin{displaymath}
@@ -883,9 +1951,9 @@ We consider two cases.
     \M{C}_1
     =
     \begin{bmatrix}
-      \M{C}_1^{1:r_0, :} 
+      \M{C}_1^{1:r_0, :}
       \\
-      \0^\T 
+      \0^\T
     \end{bmatrix}.
   \end{displaymath}
   Set
@@ -957,110 +2025,108 @@ We shall now give a formula for the SVD of $\M{X}_{k+1}$. Suppose that $\Mt{C}_k
 We consider two cases.
 \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
 \item Suppose that $\ve{q}_{k+1} \neq \0$. Let
-\begin{displaymath}
-  \M{K}_{k+1}
-  =
-  \begin{bmatrix}
-    \M{S}_k & \0
-    \\
-    \0^\T & 0
-  \end{bmatrix}
-  \left(
-    \M{I}
-    -
+  \begin{displaymath}
+    \M{K}_{k+1}
+    =
     \begin{bmatrix}
-      \ve{n}_{k+1}
+      \M{S}_k & \0
       \\
-      0
+      \0^\T & 0
     \end{bmatrix}
+    \left(
+      \M{I}
+      -
+      \begin{bmatrix}
+        \ve{n}_{k+1}
+        \\
+        0
+      \end{bmatrix}
+      \begin{bmatrix}
+        \ve{n}_{k+1}
+        \\
+        \sqrt{1 - \| \ve{n}_{k+1} \|^2}
+      \end{bmatrix}^\T \right).
+  \end{displaymath}
+  Let
+  \begin{displaymath}
+    \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
+  \end{displaymath}
+  be the SVD of $\M{K}_{k+1}$.  Then the matrix $\M{C}_{k+1}$ takes the form
+  \begin{displaymath}
+    \M{C}_{k+1}
+    =
     \begin{bmatrix}
-      \ve{n}_{k+1}
+      \M{C}_{k+1}^{1:r_k, :}
       \\
-      \sqrt{1 - \| \ve{n}_{k+1} \|^2}
-    \end{bmatrix}^\T
-  \right).
-\end{displaymath}
-Let
-\begin{displaymath}
-  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
-\end{displaymath}
-be the SVD of $\M{K}_{k+1}$.  Then the matrix $\M{C}_{k+1}$ takes the form
-\begin{displaymath}
-  \M{C}_{k+1}
-  =
-  \begin{bmatrix}
-    \M{C}_{k+1}^{1:r_k, :} 
-    \\
-    \0^\T 
-  \end{bmatrix}.
-\end{displaymath}
-Set
-\begin{displaymath}
-  \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, :}_{k+1},
-  \quad
-  \Mt{V}_{k+1}
-  =
-  [\Mt{V}_k,  \ve{q}_{k+1}]^{1:(q-k-1),:},
-\end{displaymath}
-and
-\begin{displaymath}
-  \Mt{D}_{k+1}
-  =
-  \begin{bmatrix}
-    \Mt{D}_k & \0
-    \\
-    \0^\T & 1
-  \end{bmatrix}
-  \M{D}_{k+1}.
-\end{displaymath}
-Here $[\Mt{V}_k, \ve{q}_{k+1}]^{1:(q - k - 1),:}$ stands for the matrix $[\Mt{V}_k, \ve{q}_{k+1}]$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
-\begin{displaymath}
-  \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
-\end{displaymath}
-where
-\begin{displaymath}
-  \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
-  \quad
-  \text{and}
-  \quad
-  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
-\end{displaymath}
+      \0^\T
+    \end{bmatrix}.
+  \end{displaymath}
+  Set
+  \begin{displaymath}
+    \Mt{C}_{k+1} = \Mt{C}_k \M{C}^{1:r_k, :}_{k+1},
+    \quad
+    \Mt{V}_{k+1}
+    =
+    [\Mt{V}_k,  \ve{q}_{k+1}]^{1:(q-k-1),:},
+  \end{displaymath}
+  and
+  \begin{displaymath}
+    \Mt{D}_{k+1}
+    =
+    \begin{bmatrix}
+      \Mt{D}_k & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}_{k+1}.
+  \end{displaymath}
+  Here $[\Mt{V}_k, \ve{q}_{k+1}]^{1:(q - k - 1),:}$ stands for the matrix $[\Mt{V}_k, \ve{q}_{k+1}]$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
+  \begin{displaymath}
+    \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
+  \end{displaymath}
+  where
+  \begin{displaymath}
+    \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
+    \quad
+    \text{and}
+    \quad
+    \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
+  \end{displaymath}
 \item Suppose that $\ve{q}_{k+1} =\0$. Let
-\begin{displaymath}
-  \M{K}_{k+1}
-  = \M{S}_k - \M{S}_k \ve{n}_{k+1} \ve{n}_{k+1}^\T
-  = \M{S}_k \left( \M{I} - \ve{n}_{k+1} \ve{n}_{k+1}^\T \right).
-\end{displaymath}
-Let
-\begin{displaymath}
-  \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
-\end{displaymath}
-be the SVD of $\M{K}_{k+1}$.  
-Set
-\begin{displaymath}
-  \Mt{C}_{k+1} = \Mt{C}_k \M{C}_{k+1},
-  \quad
-  \Mt{V}_{k+1}
-  =
-  \Mt{V}_k^{1:(q-k-1),:},
-  \quad
-  \text{and}
-  \quad
-  \Mt{D}_{k+1}
-  = \Mt{D}_k \M{D}_{k+1}.
-\end{displaymath}
-Here $\Mt{V}_k^{1:(q - k - 1),:}$ stands for the matrix $\Mt{V}_k$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
-\begin{displaymath}
-  \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
-\end{displaymath}
-where
-\begin{displaymath}
-  \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
-  \quad
-  \text{and}
-  \quad
-  \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
-\end{displaymath}
+  \begin{displaymath}
+    \M{K}_{k+1}
+    = \M{S}_k - \M{S}_k \ve{n}_{k+1} \ve{n}_{k+1}^\T
+    = \M{S}_k \left( \M{I} - \ve{n}_{k+1} \ve{n}_{k+1}^\T \right).
+  \end{displaymath}
+  Let
+  \begin{displaymath}
+    \M{K}_{k+1} = \M{C}_{k+1} \M{S}_{k+1}  \M{D}_{k+1}^\T
+  \end{displaymath}
+  be the SVD of $\M{K}_{k+1}$.  Set
+  \begin{displaymath}
+    \Mt{C}_{k+1} = \Mt{C}_k \M{C}_{k+1},
+    \quad
+    \Mt{V}_{k+1}
+    =
+    \Mt{V}_k^{1:(q-k-1),:},
+    \quad
+    \text{and}
+    \quad
+    \Mt{D}_{k+1}
+    = \Mt{D}_k \M{D}_{k+1}.
+  \end{displaymath}
+  Here $\Mt{V}_k^{1:(q - k - 1),:}$ stands for the matrix $\Mt{V}_k$ with the last row deleted.  The SVD of $\M{X}_{k+1}$ is given by
+  \begin{displaymath}
+    \M{X}_{k+1} = \M{U}_{k+1} \M{S}_{k+1}\M{V}_{k+1}^\T,
+  \end{displaymath}
+  where
+  \begin{displaymath}
+    \M{U}_{k+1} = \M{U}_0 \Mt{C}_{k+1}
+    \quad
+    \text{and}
+    \quad
+    \M{V}_{k+1} = \Mt{V}_{k+1} \Mt{D}_{k+1}.
+  \end{displaymath}
 
 \end{enumerate}
 
@@ -1068,16 +2134,16 @@ where
 %   \M{C}_1
 %   & =
 %     \begin{bmatrix}
-%       \M{C}_1^{1:r_0, :} 
+%       \M{C}_1^{1:r_0, :}
 %       \\
-%       \0^\T 
+%       \0^\T
 %     \end{bmatrix},
-%   % =
-%   % \begin{bmatrix}
-%   %   \M{C}^{1:r_0, 1:r_1} 
-%   %   \\
-%   %   \0^\T 
-%   % \end{bmatrix},
+%   %     =
+%   %     \begin{bmatrix}
+%   %       \M{C}^{1:r_0, 1:r_1}
+%   %       \\
+%   %       \0^\T
+%   %     \end{bmatrix},
 %   \\[2ex]
 %   \M{S}_1
 %   & =
@@ -1108,7 +2174,7 @@ Let
 \end{displaymath}
 
 \begin{displaymath}
-   \M{X}_1 = \M{U}_1 \M{S}_1 \Mt{V}_1 \Mt{D}_1.
+  \M{X}_1 = \M{U}_1 \M{S}_1 \Mt{V}_1 \Mt{D}_1.
 \end{displaymath}
 
 
@@ -1125,7 +2191,7 @@ Let
 \begin{align*}
   \|  \eve{q-k+1}{q} - \M{V}_{k-1} \ve{n}_k\|^2
   & =
-  \| \eve{q-k+1}{q} \| ^2
+    \| \eve{q-k+1}{q} \| ^2
     - 2 (\eve{q-k+1}{q})^\T \M{V}_{k-1}  \M{V}_{k-1}^\T \eve{q-k+1}{q}
   \\
   & \quad
@@ -1164,7 +2230,7 @@ Let
       \\
       \sqrt{1 - \| \ve{n}_k \|^2}
     \end{bmatrix}
-    \right)
+  \right)
 \end{displaymath}
 
 For each $1 \leq k \leq K$, the (reduced) SVD of $\M{K}_k$ takes the form
@@ -1175,23 +2241,20 @@ where
 \begin{align*}
   \M{C}_k
   & =
-  \begin{bmatrix}
-    \M{C}^{1:r_k, 1:r_k}_k
-    \\
-    \0^\T 
-  \end{bmatrix},
-  \\[2ex]
-  \M{S}_k
-  & =
-    \diag(s_{1,k}, \dots, s_{r_k,k}),
-  \\[2ex]
-  \M{D}_k
-  & =
     \begin{bmatrix}
-      \M{D}^{1:r_k, 1:r_k}_k 
+      \M{C}^{1:r_k, 1:r_k}_k
       \\
-      \M{D}^{r_k+1, 1:r_k}_k
-    \end{bmatrix}.
+      \0^\T
+    \end{bmatrix},
+  \\[2ex]
+  \M{S}_k & = \diag(s_{1,k}, \dots, s_{r_k,k}),
+  \\[2ex]
+  \M{D}_k & =
+            \begin{bmatrix}
+              \M{D}^{1:r_k, 1:r_k}_k
+              \\
+              \M{D}^{r_k+1, 1:r_k}_k
+            \end{bmatrix}.
 \end{align*}
 
 Let
@@ -1216,7 +2279,7 @@ Let
   \quad
   \Mt{C}_1 = \M{C}^{1:r_1, 1:r_1}_1
 \end{displaymath}
-and, for each $1 \leq k \leq K - 1$, 
+and, for each $1 \leq k \leq K - 1$,
 \begin{displaymath}
   \Mt{U}_{k+1} =  \Mt{U}_k
   \quad
@@ -1260,8 +2323,7 @@ Then
 
 \end{comment}
 
-\bibliographystyle{unsrtnat}
-\bibliography{references.bib}
+\bibliographystyle{unsrtnat} \bibliography{references.bib}
 
 \end{document}
 
