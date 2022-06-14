@@ -3,11 +3,14 @@
 % \documentclass{article}
 % \usepackage{arxiv}
 
+\setlength{\emergencystretch}{3.3em}
+
 \usepackage{authblk}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
+%\usepackage[bookmarksnumbered]{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
@@ -16,21 +19,62 @@
 %\usepackage{cleveref}       % smart cross-referencing
 %\usepackage{lipsum}         % Can be removed after putting your text content
 \usepackage{graphicx}
-\usepackage{natbib}
+%\usepackage{natbib}
 \usepackage{doi}
 
+% %%%hyperlinks
+
+% \usepackage[dvipsnames]{xcolor}
+
+% \newcommand\myshade{85}
+% \colorlet{mylinkcolor}{violet}
+% \colorlet{mycitecolor}{YellowOrange}
+% \colorlet{myurlcolor}{Aquamarine}
+
+% \hypersetup{
+%   linkcolor  = mylinkcolor!\myshade!black,
+%   citecolor  = mycitecolor!\myshade!black,
+%   urlcolor   = myurlcolor!\myshade!black,
+%   colorlinks = true,
+% }
+
+% %%%
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,      
+  urlcolor=cyan,
+  % pdftitle={An Example},
+  % pdfpagemode=FullScreen,
+}
+
+\urlstyle{same}
+
+%%%
+
+
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+
 \usepackage{algpseudocode}
+
+\usepackage{stmaryrd}
+% for \varominus \varoslash \lBrack \rBrack
+
+\DeclarePairedDelimiter\Brackets{\llbracket}{\rrbracket}
+\DeclarePairedDelimiter\SemiOpenBrackets{\llbracket}{\rrparenthesis}
 
 \usepackage{framed}
 
 \usepackage{amsmath,amssymb}
+
 \usepackage[amsmath,framed,thmmarks]{ntheorem}
 
 \makeatletter
 \newtheoremstyle{mybreak}%
   {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont
           ##1\ ##2\theorem@separator}\hbox{\strut}}}]}%
-  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \theorem@headerfont
+  {\item[\rlap{\vbox{\hbox{\hskip\labelsep \bf{\theorem@headerfont}
 %           ##1\ ##2\ (##3)\theorem@separator}\hbox{\strut}}}]}% DELETED
           ##1\ ##2:\ ##3\theorem@separator}\hbox{\strut}}}]}% NEW
   \makeatother
@@ -42,12 +86,23 @@
 % \theoremindent0.5cm
 % \newframedtheorem{algorithm}{Algorithm}
 
-\theoremstyle{mybreak}
+% \theoremstyle{mybreak}
+% \theoremheaderfont{\normalfont}  
+% \theorembodyfont{\normalfont}
+% \theoremseparator{\smallskip}
+% \theoremprework{\bigskip\hrule\smallskip}
+% %\theorempostwork{\bigskip\hrule\bigskip}
+% \newtheorem{algorithm}{Algorithm}
+
+\theoremstyle{break}
 \theorembodyfont{\normalfont}
-\theoremseparator{\smallskip}
-\theoremprework{\bigskip\hrule\smallskip}
-%\theorempostwork{\bigskip\hrule\bigskip}
-\newtheorem{algorithm}{Algorithm}
+%\theoremheaderfont{\normalfont}
+\theoremseparator{}
+\theoremprework{\bigskip\noindent\rule{\textwidth}{0.08em}\smallskip}
+%\theoremprework{\bigskip\hrule\vspace{0.3ex}\hrule\bigskip}
+\theorempostwork{\rule{\textwidth}{0.08em}\bigskip}
+%\theorempostwork{\bigskip\hrule\vspace{0.3ex}\hrule\bigskip}
+\newtheorem*{algorithm}{Algorithm}
 
 \usepackage{chngcntr}
 \counterwithin{equation}{section}
@@ -59,8 +114,10 @@
 
 \theorembodyfont{\rmfamily\slshape}
 \theoremstyle{plain}
+\theoremseparator{.}
 \newtheorem{result}{Result}[section]
 
+\theorembodyfont{\normalfont}
 \theoremstyle{plain}
 \theoremseparator{.}
 \theoremprework{\bigskip\hrule\bigskip}
@@ -88,7 +145,11 @@
 
 \AfterEndEnvironment{definition}{\noindent\ignorespaces}
 
-\newtheorem{rmk}{Remark}
+\theoremstyle{plain}
+\theoremseparator{.}
+\theoremprework{\bigskip}
+\theorempostwork{\smallskip}
+\newtheorem{remark}{Remark}[section]
 
 % A proof environment.
 % This is done with the extra commands made available from ntheorem
@@ -125,11 +186,15 @@
 % \usepackage[colorlinks,linkcolor=IVAIteal,citecolor=IVAIpurple,urlcolor=IVAIpurple]{hyperref}
  % \usepackage[lmargin=2cm,rmargin=2cm,tmargin=1.25cm,bmargin=1.25cm,includefoot,includehead]{geometry}
 
-%typography
+% typography
 % \usepackage[T1]{fontenc}
 % \usepackage[utf8]{inputenc}
-%% Serif Times fonts
-%\renewcommand{\rmdefault}{ptm}
+% % Serif Times fonts
+% \renewcommand{\rmdefault}{ptm}
+
+% \usepackage{utopia}
+% \usepackage{tgschola}
+% \usepackage{tgtermes}
 
 \usepackage[xspace]{ellipsis}
 % \usepackage{pifont}% http://ctan.org/pkg/pifont
@@ -170,6 +235,9 @@
 
 \usepackage{relsize}
 
+\usepackage{placeins}
+\usepackage{afterpage}
+
 \usepackage{subcaption}
 \captionsetup{font=footnotesize}
 
@@ -201,7 +269,7 @@
 
 \DeclareMathOperator*{\diag}{diag}
 \DeclareMathOperator*{\rk}{rank}
-\DeclareMathOperator{\col}{col}
+\DeclareMathOperator{\col}{Col}
 
 \renewcommand{\arraystretch}{1.3} 
 
@@ -324,6 +392,16 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator{\sgn}{sgn}
 
+\newcommand{\delcol}[2]{\M{#1} \varominus {\mathrm{col}}({#2})}
+%\newcommand{\delcol}[2]{\M{#1}^{:, -#2}}
+\newcommand{\delrow}[2]{\M{#1} \varominus \mathrm{row}(#2)}
+%\newcommand{\delrow}[2]{\M{#1}^{-#2,:}}
+\newcommand{\sel}[2]{\M{J}_{#1,#2}}
+\newcommand{\zercol}[2]{\M{#1} \varoslash \mathrm{col}(#2)}
+%\newcommand{\zercol}[2]{\M{#1}^{:,\0 \rightarrow #2}}
+\newcommand{\zerrow}[2]{\M{#1} \varoslash \mathrm{row}(#2)}
+%\newcommand{\zerrow}[2]{\M{#1}^{#2 \leftarrow \0^\T,:}}
+
 \usepackage[active]{srcltx}
 
 \usepackage{colonequals}
@@ -389,12 +467,12 @@
 
 \subsection{The method}
 
-Let $\R$ denote the set of real numbers, and let $\Mat{m}{n}$ denote the set of $m \times n$ matrices with entries in $\R$.  We identify coordinate vectors in $\R^n$ with $n \times 1$ matrices in $\R^{n \times 1}$, or, what is the same, with length-$n$ column vectors with real entries.  Let $\M{X} \in \Mat{p}{q}$ be a matrix of rank $r$, with $r \geq 1$. Let
+Let $\R$ denote the set of real numbers, and let $\Mat{m}{n}$ denote the set of $m \times n$ matrices with entries in $\R$.  We identify coordinate vectors in $\R^n$ with $n \times 1$ matrices in $\R^{n \times 1}$, or, what is the same, with length-$n$ column vectors with real entries.  Let $\M{X} \in \Mat{p}{q}$ be a matrix of rank $r \geq 1$. Let
 \begin{equation}
   \label{eq:1}
   \M{X} = \M{U} \M{S} \M{V}^\T
 \end{equation}
-be the thin SVD of $\M{X}$.  Here $\M{U} \in \Mat{p}{r}$ and $\M{V} \in \Mat{q}{r}$ have unit-norm, orthogonal columns, which can be expressed as
+be the thin (or compact) SVD of $\M{X}$.  Here $\M{U} \in \Mat{p}{r}$ and $\M{V} \in \Mat{q}{r}$ have unit-norm, orthogonal columns, which can be expressed in symbols as
 \begin{displaymath}
   \M{U}^\T \M{U} = \M{I}_r
   \quad
@@ -402,27 +480,31 @@ be the thin SVD of $\M{X}$.  Here $\M{U} \in \Mat{p}{r}$ and $\M{V} \in \Mat{q}{
   \quad
   \M{V}^\T \M{V} = \M{I}_r,
 \end{displaymath}
-and $\M{S} \in \Mat{r}{r}$ is a diagonal matrix with non-zero values.  Let $\ve{c} \in \Mat{p}{1}$, and let $\M{X}' \in \Mat{p}{(q+1)}$ be the horizontal concatenation of $\M{X}$ and $\ve{c}$,
-\begin{displaymath}
-  \M{X}' = [\M{X}, \ve{c}].
-\end{displaymath}
-We are interested in finding a formula for the thin SVD of $\M{X}'$.
+with $\M{I}_r$ standing for the $r \times r$ identity matrix, and $\M{S} \in \Mat{r}{r}$ is a diagonal matrix with positive real entries in descending order,
+\begin{math}
+  \M{S} = \diag(s_1, \dots, s_r),
+\end{math}
+where
+\begin{math}
+  s_1 \geq \dots \geq s_r > 0.
+\end{math} 
+Let $\ve{c} \in \Mat{p}{1}$, and let $[\M{X}, \ve{c}] \in \Mat{p}{(q+1)}$ be the horizontal concatenation of $\M{X}$ and $\ve{c}$.  We are interested in finding a formula for the thin SVD of $[\M{X}, \ve{c}]$.
 
-The key to obtaining a relevant expression is the representation
+The key to obtaining the relevant expression is the representation
 \begin{equation}
   \label{eq:2}
-  \M{X}' = [\M{U}, \ve{p}] \M{K}
+  [\M{X}, \ve{c}] = [\M{U}, \ve{p}] \M{K}
   \begin{bmatrix}
     \M{V} & \0
     \\
-    \0^T & 1
+    \0^\T & 1
   \end{bmatrix}^\T,
 \end{equation}
 where $\ve{p} \in \R^p$ is given by
 \begin{displaymath}
   \ve{p} =
   \begin{cases}
-    \frac{\ve{c} - \M{U} \M{U}^\T \ve{c}}{\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|} & \text{if $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$,}
+    \frac{\ve{c} - \M{U} \M{U}^\T \ve{c}}{\| \ve{c} - \M{U} \M{U}^\T \ve{c}\|} & \text{if $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$,}
     \\
     \0 & \text{otherwise,}
   \end{cases}
@@ -432,7 +514,7 @@ and $\M{K} \in \Mat{(r+1)}{(r+1)}$ is given by
   \M{K} =
   \begin{bmatrix}
     \M{S} & \M{U}^\T \ve{c} \\
-    \0^T & \| \ve{c} - \M{U} \M{U}^\T \ve{c} \|
+    \0^\T & \| \ve{c} - \M{U} \M{U}^\T \ve{c} \|
   \end{bmatrix}.
 \end{displaymath}
 Let
@@ -440,7 +522,7 @@ Let
   \label{eq:3}
   \M{K} = \M{C} \M{S}' \M{D}^\T
 \end{equation}
-be the thin SVD of $\M{K}$, with $\M{C} \in \Mat{(r+1)}{k}$, $\M{S}' \in \Mat{k}{k}$, and $\M{D} \in \Mat{(r+1)}{k}$, and with $k$ being the rank of $\M{K}$. Let $\M{U}' \in \Mat{p}{k}$ be given by
+be the thin SVD of $\M{K}$, with $\M{C} \in \Mat{(r+1)}{k}$, $\M{S}' \in \Mat{k}{k}$, and $\M{D} \in \Mat{(r+1)}{k}$, $k$~being the rank of $\M{K}$. Let $\M{U}' \in \Mat{p}{k}$ be given by
 \begin{equation}
   \label{eq:4}
   \M{U}' = [\M{U}, \ve{p}] \M{C},
@@ -452,7 +534,7 @@ and let $\M{V}' \in \Mat{(q+1)}{k}$ be given by
   \begin{bmatrix}
     \M{V} & \0
     \\
-    \0^T & 1
+    \0^\T & 1
   \end{bmatrix}
   \M{D}.
 \end{equation}
@@ -464,9 +546,9 @@ and let $\M{V}' \in \Mat{(q+1)}{k}$ be given by
   We have
   \begin{equation}
     \label{eq:6}
-    \M{X}' = \M{U}' \M{S}' \M{V}'^\T,
+    [\M{X}, \ve{c}] = \M{U}' \M{S}' \M{V}'^\T,
   \end{equation}
-  and this representation is the \emph{thin} SVD of $\M{X}'$.
+  and this representation is the thin SVD of $[\M{X}, \ve{c}]$.
 \end{result}
 
 Before giving the proof, we make a comment. Since $\M{K}$ is an $(r+1) \times (r+1)$ matrix and $\M{S}$ is a submatrix of $\M{X}$ of rank $r$, the rank of $\M{K}$ is either $r$ or $r+1$. Since
@@ -503,7 +585,7 @@ Thus
 
 % Given a matrix $\M{A}$, let $\col(\M{X})$ denote the column space of $\M{A}$. Recalling that by $r$ we denote the rank of $\M{X}$, we have
 % \begin{displaymath}
-%     \rk \M{X}' =
+%     \rk [\M{X}, \ve{c}] =
 %     \begin{cases}
 %       r & \text{if $c \in \col(\M{X})$},
 %       \\
@@ -514,13 +596,13 @@ Thus
 %   \begin{math}
 %     \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
 %   \end{math}
-%   We see that $\M{X}'$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
+%   We see that $[\M{X}, \ve{c}]$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
 %   \begin{math}
 %     \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
 %   \end{math}
 
 \begin{proof}[Proof of Result~\ref{res:1}]
-  Formula~\eqref{eq:6} follows immediately from combining \eqref{eq:2}, \eqref{eq:3}, and \eqref{eq:4}.  Since $\M{S}'$ is a diagonal matrix with non-zero elements, it remains only show that $\M{U}'$ and $\M{V}' $ have unit-norm, orthogonal columns, that is, 
+  Formula~\eqref{eq:6} follows immediately from combining \eqref{eq:2}, \eqref{eq:3}, \eqref{eq:4}, and \eqref{eq:5}.  Since $\M{S}'$ is a diagonal matrix with positive elements in descending order, it remains only show that $\M{U}'$ and $\M{V}' $ have unit-norm, orthogonal columns, that is,
   \begin{math}
     \M{U}'^\T \M{U}' = \M{I}_k
   \end{math}
@@ -528,20 +610,21 @@ Thus
   \begin{math}
     \M{V}'^\T \M{V}' = \M{I}_k.
   \end{math}
+
   Note that
   \begin{equation}
     \label{eq:8}
     \begin{split}
       \M{U}'^\T \M{U}' & = \M{C}^\T [\M{U}, \ve{p}]^\T [\M{U}, \ve{p}] \M{C} = \M{C}^\T
       \begin{bmatrix}
-        \M{U}^\T \M{U} & \M{U}^T \ve{p} \\
+        \M{U}^\T \M{U} & \M{U}^\T \ve{p} \\
         \ve{p}^\T \M{U} & \| \ve{p} \|^2
       \end{bmatrix}
       \M{C}
       \\
       & = \M{C}^\T
       \begin{bmatrix}
-        \M{I}_r & \M{U}^T \ve{p} \\
+        \M{I}_r & \M{U}^\T \ve{p} \\
         \ve{p}^\T \M{U} & \| \ve{p} \|^2
       \end{bmatrix}
       \M{C}.
@@ -549,22 +632,22 @@ Thus
   \end{equation}
   If $\ve{p} = \0$, then, obviously, $\M{U}^\T \ve{p} = \0$.  If $\ve{p} \neq \0$, then
   \begin{displaymath}
-    \M{U}^T \ve{p}
-    =  \frac{\M{U}^T \ve{c} - \M{U}^T \M{U} \M{U}^\T \ve{c}}
+    \M{U}^\T \ve{p}
+    =  \frac{\M{U}^\T \ve{c} - \M{U}^\T \M{U} \M{U}^\T \ve{c}}
     {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
     =
-    \frac{\M{U}^T \ve{c} - \M{I}_r \M{U}^\T \ve{c}}
+    \frac{\M{U}^\T \ve{c} - \M{I}_r \M{U}^\T \ve{c}}
     {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
     =
-    \frac{\M{U}^T \ve{c} - \M{U}^\T \ve{c}}
+    \frac{\M{U}^\T \ve{c} - \M{U}^\T \ve{c}}
     {\| \ve{c} - \M{U}^\T \M{U} \ve{c}\|}
     =
     \0.
   \end{displaymath}
-  Thus in either case $\M{U}^\T \ve{p} = \0$. Moreover, $\ve{p}^\T \M{U} = (\M{U}^\T \ve{p})^\T = \0^T$. Hence
+  Thus in either case $\M{U}^\T \ve{p} = \0$. Moreover, $\ve{p}^\T \M{U} = (\M{U}^\T \ve{p})^\T = \0^\T$. Hence
   \begin{displaymath}
     \begin{bmatrix}
-      \M{I}_r & \M{U}^T \ve{p} \\
+      \M{I}_r & \M{U}^\T \ve{p} \\
       \ve{p}^\T \M{U} & \| \ve{p} \|^2
     \end{bmatrix}
     =
@@ -575,11 +658,11 @@ Thus
   \end{displaymath}
   We now consider two cases.
   \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
-    \item Suppose that $\ve{p} \neq \0$. Then $\| \ve{p} \| = 1$ and
+  \item Suppose that $\ve{p} \neq \0$, in which case $k = r+1$. Then $\| \ve{p} \| = 1$ and
     \begin{equation}
       \label{eq:9}
       \begin{bmatrix}
-        \M{I}_r & \M{U}^T \ve{p}
+        \M{I}_r & \M{U}^\T \ve{p}
         \\
         \ve{p}^\T \M{U} & \| \ve{p} \|^2
       \end{bmatrix}
@@ -590,8 +673,7 @@ Thus
       \end{bmatrix}.
     \end{equation}
     Moreover,
-    \begin{equation}
-      \label{eq:10}
+    \begin{displaymath}
       \M{C}^\T
       \begin{bmatrix}
         \M{I}_r & \0 \\
@@ -603,22 +685,22 @@ Thus
       =
       \M{C}^\T \M{C}
       = \M{I}_k.
-    \end{equation}
-    Combining \eqref{eq:8}, \eqref{eq:9}, and \eqref{eq:10}, we see that
+    \end{displaymath}
+    Combining this with \eqref{eq:8} and \eqref{eq:9}, we see that
     \begin{math}
-      \M{U}'^\T \M{U'} = \M{I}_k.
+      \M{U}'^\T \M{U}' = \M{I}_k.
     \end{math}
-  \item Suppose that $\ve{p} = \0$. Then
+  \item Suppose that $\ve{p} = \0$, in which case $k = r$. Then
     \begin{equation}
-      \label{eq:11}
+      \label{eq:10}
       \begin{bmatrix}
-        \M{I}_r & \M{U}^T \ve{p} \\
+        \M{I}_r & \M{U}^\T \ve{p} \\
         \ve{p}^\T \M{U} & \| \ve{p} \|^2
       \end{bmatrix}
       =
       \begin{bmatrix}
         \M{I}_r & \0 \\
-        \0^T & 0
+        \0^\T & 0
       \end{bmatrix}.
     \end{equation}
     Moreover, the matrix $\M{K}$ now becomes
@@ -626,64 +708,62 @@ Thus
       \M{K} =
       \begin{bmatrix}
         \M{S} & \M{U}^\T \ve{c} \\
-        \0^T & 0
+        \0^\T & 0
       \end{bmatrix}.
     \end{displaymath}
-    Since each column of $\M{K}$ has zero last entry and since the column space of $\M{U}'$ coincides with the column space of $\M{K}$, it follows that each column of $\M{U}'$ has zero last entry. In other words,
+    Since each column of $\M{K}$ has zero last entry and since the column space of $\M{C}$ coincides with the column space of $\M{K}$, it follows that each column of $\M{C}$ has zero last entry. In other words,
     \begin{equation}
-      \label{eq:12}
-      \M{C}
-      =
+      \label{eq:11}
+      \M{C} =
       \begin{bmatrix}
-        \M{C}^{1:r, 1:r}
+        \M{C}^{1:r, :}
         \\
-        \0^T
-      \end{bmatrix}.
+        \0^\T
+      \end{bmatrix},
     \end{equation}
-    Consequently,
+    where $\M{C}^{1:r, :} = \M{C}^{1:r,1:k} \in \Mat{r}{k}$.  Here we use the \textsc{Matlab}-style notation where $\M{C}^{1:r, :}$ denotes the submatrix of elements of $\M{C}$ that are in rows $1$ to $r$, and $\M{C}^{1:r,1:k}$ denotes the submatrix of elements of $\M{C}$ that are in rows $1$ to $r$ and in columns $1$ to $k$.
+    % 
+    % 
+    % 
+    % Here, given a matrix $\M{A}$ with at least $k$ rows and $k$ columns, we use the \textsc{Matlab}-style notation $\M{A}^{1:k,1:k}$ to denote the submatrix of elements of $\M{A}$ that are in rows $1$ to $k$ and in columns $1$ to $k$.
+    %
+    %
+    %
+    In view of \eqref{eq:11}, we have
     \begin{align*}
       \M{C}^\T
       \begin{bmatrix}
         \M{I}_r & \0 \\
-        \0^T & 0
+        \0^\T & 0
       \end{bmatrix}
-               \M{C}
-             & =
-               [(\M{C}^{1:r, 1:r})^\T, \0]
-               \begin{bmatrix}
-                 \M{I}_r & \0 \\
-                 \0^T & 0
-               \end{bmatrix}
+                \M{C} & =
+                        [(\M{C}^{1:r, :})^\T, \0]
                         \begin{bmatrix}
-                          \M{C}^{1:r, 1:r}
-                          \\
-                          \0^T
+                          \M{I}_r & \0 \\
+                          \0^\T & 0
                         \end{bmatrix}
-      \\
-                & =
-                  (\M{C}^{1:r, 1:r})^\T   \M{C}^{1:r, 1:r}
-                  =
-                  \M{I}_r.
-    \end{align*} 
-    But $k = r$ in the current case, so
-    \begin{equation}
-      \label{eq:13}
-      \M{C}^\T
-      \begin{bmatrix}
-        \M{I}_r & \0 \\
-        \0^T & 0
-      \end{bmatrix}
-      \M{C}
-      = \M{I}_k.
-    \end{equation}
-    Combining \eqref{eq:8}, \eqref{eq:11}, and \eqref{eq:13}, we conclude that
+                                  \begin{bmatrix}
+                                    \M{C}^{1:r,:}
+                                    \\
+                                    \0^\T
+                                  \end{bmatrix}
+      \\ & =
+           [(\M{C}^{1:r, :})^\T, \0]
+           \begin{bmatrix}
+             \M{C}^{1:r,:}
+             \\
+             \0^\T
+           \end{bmatrix}
+      = \M{C}^\T \M{C} = \M{I}_k.
+    \end{align*}
+    Combining this with \eqref{eq:8} and \eqref{eq:10}, we conclude that
     \begin{math}
-      \M{U}'^\T \M{U'} = \M{I}_k.
+      \M{U}'^\T \M{U}' = \M{I}_k.
     \end{math}
   \end{enumerate}
   Thus in either of the considered cases, 
   \begin{math}
-    \M{U}'^\T \M{U'} = \M{I}_k.
+    \M{U}'^\T \M{U}' = \M{I}_k.
   \end{math}
   
   Next note that
@@ -695,12 +775,12 @@ Thus
       \begin{bmatrix}
         \M{V} & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix}^\T
                \begin{bmatrix}
                  \M{V} & \0
                  \\
-                 \0^T & 1
+                 \0^\T & 1
                \end{bmatrix}
                         \M{D}
     \\
@@ -709,12 +789,12 @@ Thus
       \begin{bmatrix}
         \M{V}^\T & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix}
                \begin{bmatrix}
                  \M{V} & \0
                  \\
-                 \0^T & 1
+                 \0^\T & 1
                \end{bmatrix}
                         \M{D}
     \\
@@ -723,7 +803,7 @@ Thus
       \begin{bmatrix}
         \M{V}^\T \M{V} & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix}
                \M{D}
     \\
@@ -732,7 +812,7 @@ Thus
       \begin{bmatrix}
         \M{I}_r & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix}
                \M{D}
     \\
@@ -744,35 +824,38 @@ Thus
   This completes the proof.
 \end{proof}
 
-Comparing \eqref{eq:3} and \eqref{eq:6}, we see that the SVD of $\M{K}$ and the SVD of $\M{X}'$ share the diagonal part $\M{S}'$.  It follows that $\M{K}$ and $\M{X}'$ have the same rank. Given a matrix $\M{A}$, let $\rk \M{A}$ denotes the rank of and $\M{A}$, and let $\col \M{A}$ denote the column space of $\M{A}$. Recalling that, for a given matrix $\M{A}$, the rank of $\M{A}$ equals the dimension of the column space of $\M{A}$, we readily see that
-\begin{equation}
-  \label{eq:14}
-  \rk \M{X}' =
-  \begin{cases}
-    r & \text{if $c \in \col \M{X}$},
-    \\
-    r + 1 & \text{otherwise}.
-  \end{cases}
-\end{equation}
-Here, let us recall, $r$ denotes the rank of $\M{X}$.  A moment's reflection shows that $c \notin \col \M{X}$ if and only if
-\begin{math}
-  \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
-\end{math}
-The latter condition holds if and only if
-\begin{math}
-  \ve{p} \neq \0.
-\end{math}
-Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
+\begin{remark}
+  \label{rmk:1}
+  Comparing \eqref{eq:3} and \eqref{eq:6}, we see that the SVD of $\M{K}$ and the SVD of $[\M{X}, \ve{c}]$ share the diagonal part $\M{S}'$.  It follows that $\M{K}$ and $[\M{X}, \ve{c}]$ have the same rank. Given a matrix $\M{A}$, let $\rk \M{A}$ denote the rank of $\M{A}$, and let $\col \M{A}$ denote the column space of $\M{A}$. Recalling that, for a given matrix $\M{A}$, the rank of $\M{A}$ equals the dimension of the column space of $\M{A}$, we readily see that
+  \begin{equation}
+    \label{eq:12}
+    \rk [\M{X}, \ve{c}] =
+    \begin{cases}
+      r & \text{if $\ve{c} \in \col \M{X}$},
+      \\
+      r + 1 & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+  Let us remind ourselves that here $r$ denotes the rank of $\M{X}$.  A moment's reflection shows that $\ve{c} \notin \col \M{X}$ if and only if
+  \begin{math}
+    \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
+  \end{math}
+  The latter condition holds if and only if
+  \begin{math}
+    \ve{p} \neq \0.
+  \end{math}
+  Thus \eqref{eq:12} is equivalent to \eqref{eq:7}. In other words, $k = r$ if $\ve{c}$ is in the linear span of the columns of $\M{X}$, and $k = r+1$ if $\ve{c}$ is not in the linear span of the columns of $\M{X}$.
+\end{remark}
 
 
-% We see that $\M{X}'$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
+% We see that $[\M{X}, \ve{c}]$ and $\M{K}$ have the same rank, which is $r$ or $r+1$, and that this common rank is $r+1$ if and only if
 % \begin{math}
 %   \ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0.
 % \end{math}
 
 % We now consider two cases.
 % \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
-% \item Suppose that $\rk \M{X}' = r + 1$, or, equivalently, that $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$. Since
+% \item Suppose that $\rk [\M{X}, \ve{c}] = r + 1$, or, equivalently, that $\ve{c} - \M{U} \M{U}^\T \ve{c} \neq \0$. Since
 %   \begin{displaymath}
 %     \det \M{K} = \det \M{S} \cdot 
 %     \| \ve{c} - \M{U} \M{U}^\T \ve{c} \| \neq 0,
@@ -783,17 +866,17 @@ Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
 %       \begin{smallmatrix}
 %         \M{V} & \0
 %         \\
-%         \0^T & 1
+%         \0^\T & 1
 %       \end{smallmatrix}
 %     \right] \in \Mat{(q+1)}{(r+1)}
 %   \end{math}
-%   have unit-norm, orthogonal columns, and since $\M{C}$ and $\M{D}$ are orthogonal, it follows that $\M{U}'$ and $\M{V}'$, defined in \eqref{eq:4}, have unit-norm, orthogonal columns. Thus \eqref{eq:6} gives the thin SVD of $\M{X}'$.
-% \item Suppose that $\rk \M{X}' = r$, or, equivalently, that $\ve{p} = 0$. Then
+%   have unit-norm, orthogonal columns, and since $\M{C}$ and $\M{D}$ are orthogonal, it follows that $\M{U}'$ and $\M{V}'$, defined in \eqref{eq:4}, have unit-norm, orthogonal columns. Thus \eqref{eq:6} gives the thin SVD of $[\M{X}, \ve{c}]$.
+% \item Suppose that $\rk [\M{X}, \ve{c}] = r$, or, equivalently, that $\ve{p} = 0$. Then
 %   \begin{displaymath}
 %     \M{K} =
 %     \begin{bmatrix}
 %       \M{S} & \M{U}^\T \ve{c} \\
-%       \0^T & 0
+%       \0^\T & 0
 %     \end{bmatrix}.
 %   \end{displaymath}
 %   The rank of $\M{K}$ is $r$, so $\M{S}' \in \Mat{r}{r}$ and $\M{C}, \M{D} \in \Mat{(r+1)}{r}$.  Since the last row of $\M{K}$ is a null vector, it follows that the last row of $\M{C}$ is also a null vector.  Thus
@@ -803,7 +886,7 @@ Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
 %     \begin{bmatrix}
 %       \M{C}^{1:r, 1:r}
 %       \\
-%       \0^T
+%       \0^\T
 %     \end{bmatrix},
 %   \end{displaymath}
 %   where $\M{C}^{1:r, 1:r}$ is an $r \times r$ orthogonal matrix. Consequently,
@@ -813,7 +896,7 @@ Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
 %     \begin{bmatrix}
 %       \M{C}^{1:r, 1:r}
 %       \\
-%       \0^T
+%       \0^\T
 %     \end{bmatrix}
 %     = \M{U} \M{C}^{1:r, 1:r}.
 %   \end{displaymath}
@@ -833,14 +916,14 @@ Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
 %     \begin{bmatrix}
 %       \M{V} & \0
 %       \\
-%       \0^T & 1
+%       \0^\T & 1
 %     \end{bmatrix}
 %     \M{D}
 %     =
 %     \begin{bmatrix}
 %       \M{V} & \0
 %       \\
-%       \0^T & 1
+%       \0^\T & 1
 %     \end{bmatrix}
 %     \begin{bmatrix}
 %       \M{D}^{1:r,1:r}
@@ -857,36 +940,36 @@ Thus \eqref{eq:14} is equivalent to \eqref{eq:7}.
 
 % \end{enumerate}
 
-\subsection{A representation}
+\subsection{Calculating $\M{U}$ and $\M{V}$ iteratively}
 
 Suppose that the matrices $\M{U}$ and $\M{V}$ appearing in \eqref{eq:1} can be represented as
 \begin{equation}
-  \label{eq:15}
+  \label{eq:13}
   \M{U} = \Mt{U} \Mt{C},
  \end{equation}
  where $\Mt{U} \in \Mat{p}{r}$ and $\Mt{C} \in \Mat{r}{r}$, and
 \begin{equation}
-  \label{eq:16}
+  \label{eq:14}
   \M{V} = \Mt{V} \Mt{D}, 
  \end{equation}
  where $\Mt{V} \in \Mat{q}{r}$ and $\Mt{D} \in \Mat{r}{r}$.  Then, as it turns out, the matrices $\M{U}'$ and $\M{V}'$ given in \eqref{eq:4} and \eqref{eq:5} can also be represented in a similar fashion as
 \begin{equation}
-  \label{eq:17}
+  \label{eq:15}
   \M{U}' = \Mt{U}' \Mt{C}', 
 \end{equation}
 where $\Mt{U}' \in \Mat{p}{k}$ and $\Mt{C}' \in \Mat{k}{k}$, and
 \begin{equation}
-  \label{eq:18}
+  \label{eq:16}
   \M{V}' = \Mt{V}' \Mt{D}', 
 \end{equation}
 where $\Mt{V}' \in \Mat{q}{k}$ and $\Mt{D}' \in \Mat{k}{k}$.  The explicit formulae for $\Mt{U}'$, $\Mt{C}'$, $\Mt{V}'$, and $\Mt{D}'$, which we shall derive next, are intended to be used iteratively to obtain an expression for the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix. In this target scenario, the matrices $\M{U}$ and $\M{V}$ corresponding to the initial matrix are represented as $\M{U} = \Mt{U} \Mt{C}$ and $\M{V} = \Mt{V} \Mt{D}$, where $\Mt{U} = \M{U}$, $\Mt{C} = \M{I}_r$, $\Mt{V} = \M{V}$, and $\Mt{D} = \M{I}_r$.
 
-\subsubsection{Representing $\M{U}'$}
+\subsubsection{A formula for $\M{U}'$}
 
 We consider two cases.
 
 \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
-\item Suppose that $\ve{p} \neq \0$ (or, equivalently, that $k= r + 1$). Then, in view \eqref{eq:4} and \eqref{eq:15},
+\item Suppose that $\ve{p} \neq \0$ (or, equivalently, that $k= r + 1$). Then, in view \eqref{eq:4} and \eqref{eq:13},
 \begin{displaymath}
   \M{U}' = [\M{U}, \ve{p}] \M{C} = [\Mt{U} \Mt{C}, \ve{p}] \M{C}
   =
@@ -902,7 +985,7 @@ We now obtain the desired representation
 \begin{math}
   \M{U}' = \Mt{U}' \Mt{C}'
 \end{math}
-upon letting
+by letting
 \begin{displaymath}
   \Mt{U}' = [\Mt{U}, \ve{p}]
   \quad
@@ -916,14 +999,14 @@ upon letting
   \end{bmatrix}
   \M{C}.
 \end{displaymath}
-\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$). Then, in view of \eqref{eq:4} and \eqref{eq:12},
+\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$). Then, in view of \eqref{eq:4}, \eqref{eq:11}, and the observation that now $\M{C}^{1:r,:} = \M{C}^{1:r, 1:r}$,
 \begin{displaymath}
   \M{U}' = [\M{U}, \ve{p}] \M{C}
   = [\M{U}, \0]
   \begin{bmatrix}
     \M{C}^{1:r, 1:r}
     \\
-    \0^T
+    \0^\T
   \end{bmatrix}
   = \M{U} \M{C}^{1:r, 1:r}
   = \Mt{U} \Mt{C}  \M{C}^{1:r, 1:r}.
@@ -932,7 +1015,7 @@ This leads to the representation
 \begin{math}
   \M{U}' = \Mt{U}' \Mt{C}'
 \end{math}
-upon letting
+with
 \begin{displaymath}
   \Mt{U}' =  \Mt{U}
   \quad
@@ -942,87 +1025,88 @@ upon letting
 \end{displaymath}
 \end{enumerate}
 
-\subsubsection{Representing $\M{V}'$}
+\subsubsection{A formula for $\M{V}'$}
 
 We consider two cases.
 
 \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
 \item Suppose that $\ve{p} \neq \0$ (or, equivalently, that $k= r + 1$).  Then
-\begin{displaymath}
-  \M{V}' =
-  \begin{bmatrix}
-    \M{V} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \M{D}
-  =
-  \begin{bmatrix}
-    \Mt{V} \Mt{D} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \M{D}
-  =
-  \begin{bmatrix}
-    \Mt{V} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \begin{bmatrix}
-    \Mt{D} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \M{D}.
-\end{displaymath}
-Accordingly, we obtain the representation
-\begin{math}
-  \M{V}' = \Mt{V}' \Mt{D}'
-\end{math}
-upon letting
-\begin{displaymath}
-  \Mt{V}' =
-  \begin{bmatrix}
-    \Mt{V} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \quad
-  \text{and}
-  \quad
-  \Mt{D}' =
-  \begin{bmatrix}
-    \Mt{D} & \0
-    \\
-    \0^T & 1
-  \end{bmatrix}
-  \M{D}.
-\end{displaymath}
-\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$).  Then $\M{D} \in \Mat{(r+1)}{r}$, and we have
-  \begin{displaymath}
-    \M{D}
-    =
-    \begin{bmatrix}
-      \M{D}^{1:r,1:r}
-      \\
-      \M{D}^{r+1,1:r}
-    \end{bmatrix}.
-  \end{displaymath}
-  Now, by \eqref{eq:5}, 
   \begin{displaymath}
     \M{V}' =
     \begin{bmatrix}
       \M{V} & \0
       \\
-      \0^T & 1
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}
+    =
+    \begin{bmatrix}
+      \Mt{V} \Mt{D} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}
+    =
+    \begin{bmatrix}
+      \Mt{V} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      \Mt{D} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}.
+  \end{displaymath}
+  Accordingly, we obtain the representation
+  \begin{math}
+    \M{V}' = \Mt{V}' \Mt{D}'
+  \end{math}
+  by letting
+  \begin{displaymath}
+    \Mt{V}' =
+    \begin{bmatrix}
+      \Mt{V} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \quad
+    \text{and}
+    \quad
+    \Mt{D}' =
+    \begin{bmatrix}
+      \Mt{D} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}.
+  \end{displaymath}
+\item Suppose that $\ve{p} = \0$ (or, equivalently, that $k = r$).  Then $\M{D}$
+  is a $(r+1) \times r$ matrix and we have
+  \begin{displaymath}
+    \M{D}
+    =
+    \begin{bmatrix}
+      \M{D}^{1:r,1:r}
+      \\
+      \M{D}^{r+1,1:r}
+    \end{bmatrix}.
+  \end{displaymath}
+  Here $\M{D}^{r+1,1:r}$ stands for the last row of $\M{D}$.  In view of \eqref{eq:5},
+  \begin{displaymath}
+    \M{V}' =
+    \begin{bmatrix}
+      \M{V} & \0
+      \\
+      \0^\T & 1
     \end{bmatrix}
     \M{D}
     =
     \begin{bmatrix}
       \M{V} & \0
       \\
-      \0^T & 1
+      \0^\T & 1
     \end{bmatrix}
     \begin{bmatrix}
       \M{D}^{1:r,1:r}
@@ -1036,66 +1120,112 @@ upon letting
       \M{D}^{r+1,1:r}
     \end{bmatrix}.
   \end{displaymath}
-Furthermore, in view of \eqref{eq:16},  
-\begin{align*}
-  % \M{V}'
-  % & =
-    \begin{bmatrix}
-      \M{V} \M{D}^{1:r,1:r}
-      \\
+  At this stage we make an additional assumption that $\| \M{D}^{r+1,1:r} \| \neq 1$. Then $\M{D}^{1:r,1:r}$ is invertible, with inverse
+  \begin{displaymath}
+    (\M{D}^{1:r,1:r})^{-1}
+    = \left(
+      \M{I}_r
+      + \frac{1}{1 - \| \M{D}^{r+1,1:r} \| ^2}
+      \left(\M{D}^{r+1,1:r}\right)^\T
       \M{D}^{r+1,1:r}
-    \end{bmatrix}
-  & =
-  \begin{bmatrix}
-    \Mt{V} \Mt{D} \M{D}^{1:r,1:r}
-    \\
+    \right)
+    \left(\M{D}^{1:r,1:r}\right)^\T.
+  \end{displaymath}
+  This can easily be inferred from the fact that
+  \begin{math}
+    \M{D}^\T \M{D} = \M{I}_r,
+  \end{math}
+  or, what is the same, that
+  \begin{displaymath}
+    \left(\M{D}^{1:r,1:r}\right)^\T\M{D}^{1:r,1:r}
+    +
+    \left(\M{D}^{r+1,1:r}\right)^\T
     \M{D}^{r+1,1:r}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    \Mt{V} \Mt{D} \M{D}^{1:r, 1:r}
+    =
+    \M{I}_r.
+  \end{displaymath}
+  The $r \times r$ matrix $\Mt{D}$ is invertible, for otherwise, in view of \eqref{eq:14}, $\M{V}$ would have rank smaller than $r$. Therefore
+  \begin{math}
+    \Mt{D} \M{D}^{1:r,1:r}
+  \end{math}
+  is invertible, with inverse
+  \begin{displaymath}
+    \left(\Mt{D} \M{D}^{1:r,1:r}\right)^{-1}
+    =
+    \left(\M{D}^{1:r,1:r}\right)^{-1}
+    \Mt{D}^{-1}.
+  \end{displaymath}
+  Now, using \eqref{eq:14}, we have
+  \begin{align*}
+    % \M{V}'
+    % & =
+        \begin{bmatrix}
+          \M{V} \M{D}^{1:r,1:r}
+          \\
+          \M{D}^{r+1,1:r}
+        \end{bmatrix}
+      & =
+        \begin{bmatrix}
+          \Mt{V} \Mt{D} \M{D}^{1:r,1:r}
+          \\
+          \M{D}^{r+1,1:r}
+        \end{bmatrix}
+    =
+    \begin{bmatrix}
+      \Mt{V} \Mt{D} \M{D}^{1:r, 1:r}
+      \\
+      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^{-1} \Mt{D} \M{D}^{1:r, 1:r}
+    \end{bmatrix}
     \\
-    \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+ \Mt{D} \M{D}^{1:r, 1:r}
-  \end{bmatrix}
-  \\
-  & =
+      & =
+        \begin{bmatrix}
+          \Mt{V}
+          \\
+          \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^{-1}
+        \end{bmatrix}
+    \Mt{D} \M{D}^{1:r, 1:r}.
+  \end{align*}
+  This leads to the representation
+  \begin{math}
+    \M{V}' = \Mt{V}' \Mt{D}'
+  \end{math}
+  with
+  \begin{displaymath}
+    \Mt{V}' =
     \begin{bmatrix}
       \Mt{V}
       \\
-      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^{-1}
     \end{bmatrix}
-  \Mt{D} \M{D}^{1:r, 1:r}.
-\end{align*}
-This leads to the representation
-\begin{math}
-  \M{V}' =  \Mt{V}' \Mt{D}'
-\end{math}
-upon letting
-\begin{displaymath}
-  \Mt{V}' =
-  \begin{bmatrix}
-    \Mt{V}
-    \\
-    \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
-  \end{bmatrix}
-  \quad
-  \text{and}
-  \quad
-  \Mt{D}' =
-  \Mt{D} \M{D}^{1:r, 1:r}.
-\end{displaymath}
+    \quad
+    \text{and}
+    \quad
+    \Mt{D}' =
+    \Mt{D} \M{D}^{1:r, 1:r}.
+  \end{displaymath}
+  For the sake of agreement with the formulation introduced in~\cite{brand06:_fast}, we let
+   \begin{displaymath}
+    \Mt{V}' =
+    \begin{bmatrix}
+      \Mt{V}
+      \\
+      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+.
+    \end{bmatrix}
+  \end{displaymath}
+  Here, for a given matrix $\M{A}$, we use $\M{A}^+$ to denote the pseudo-inverse (or Moore--Penrose inverse) of $\M{A}$.
 \end{enumerate}
 
 \subsection{Iterative updating}
 
-We are now in a position to present an algorithm for calculating the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix.
+We are now in a position to present an algorithm for calculating the SVD of a matrix formed by adding in succession a number of columns to a given matrix. This algorithm was first developed and presented in~\cite{brand06:_fast}.
 
-\begin{algorithm}[\textnormal{\textsc{ThinSVD}($[\M{X}, \ve{c}_1, \dots, \ve{c}_K]$)}]
+\begin{algorithm}[\textnormal{\textsc{ThinSVD}(\unboldmath$[\M{X}, \ve{c}_1, \dots, \ve{c}_K]$)}]
+% \begin{algorithm}[\textnormal{\textsc{ThinSVD}(\mbox{$[\M{X}, \ve{c}_1, \dots, \ve{c}_K]$})}]
   \rule{\textwidth}{0.4pt}
   \begin{algorithmic}[1]
-    \Require $\M{X} \in \Mat{p}{q}, \ve{c}_1 \in \R^p, \dots, \ve{c}_K \in \R^p$
+    \Require $\M{X} \in \Mat{p}{q}$, $\ve{c}_1 \in \Mat{p}{1}$, \dots, $\ve{c}_K \in \Mat{p}{1}$
     \State $(\M{U}, \M{S}, \M{V}) \gets \textsc{ThinSVD}(\M{X})$
-    \State $r \gets \textsc{Order}(\M{S})$
+    \State $r \gets \textsc{NumberOfColumns/Rows}(\M{S})$
     \State $\Mt{U} \gets \M{U}$
     \State $\Mt{C} \gets \M{I}_r$
     \State $\Mt{V} \gets \M{V}$
@@ -1112,7 +1242,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
       \gets
       \begin{bmatrix}
         \M{S} & \M{U}^\T \ve{c}_k \\
-        \0^T & \| \ve{c}_k - \M{U} \M{U}^\T \ve{c}_k \|
+        \0^\T & \| \ve{c}_k - \M{U} \M{U}^\T \ve{c}_k \|
       \end{bmatrix}
     \end{math}
     \State
@@ -1140,7 +1270,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
       \begin{bmatrix}
         \Mt{V} & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix} 
     \end{math}
     \State
@@ -1150,7 +1280,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
       \begin{bmatrix}
         \Mt{D} & \0
         \\
-        \0^T & 1
+        \0^\T & 1
       \end{bmatrix}
       \M{D}
     \end{math}
@@ -1163,7 +1293,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
     \end{math}
     \State
     \begin{math}
-      \Mt{V}'
+      \Mt{V}
       \gets
       \begin{bmatrix}
         \Mt{V}
@@ -1180,17 +1310,17 @@ We are now in a position to present an algorithm for calculating the thin SVD of
     \EndIf
     \State
     \begin{math}
+      \M{U} \gets \Mt{U} \Mt{C}
+    \end{math}
+    \State
+    \begin{math}
       \M{S} \gets \M{S}'
     \end{math}
     \State
     \begin{math}
-      r \gets \textsc{Order}(\M{S})
+      r \gets \textsc{NumberOfColumns/Rows}(\M{S})
     \end{math}
     \EndFor
-    \State
-    \begin{math}
-      \M{U} \gets \Mt{U} \Mt{C}
-    \end{math}
     \State
     \begin{math}
       \M{V} \gets \Mt{V} \Mt{D}
@@ -1255,7 +1385,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{C}^{1:r, 1:r}
 %     \\
-%     \0^T
+%     \0^\T
 %   \end{bmatrix}
 %   = \M{U} \M{C}^{1:r, 1:r}
 %   = \Mt{U} \Mt{C}  \M{C}^{1:r, 1:r}
@@ -1285,26 +1415,26 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{V} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}
 %   =
 %   \begin{bmatrix}
 %     \Mt{V} \Mt{D} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}
 %   =
 %   \begin{bmatrix}
 %     \Mt{V} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \begin{bmatrix}
 %     \Mt{D} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}
 % \end{displaymath}
@@ -1314,7 +1444,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \Mt{V} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \quad
 %   \text{and}
@@ -1323,7 +1453,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \Mt{D} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}.
 % \end{displaymath}
@@ -1395,12 +1525,12 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{V}_0 & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}^\T = [\M{U}_0, \ve{p}_1] \M{C}_1 \M{S}_1 \M{D}_1^\T
 %   \begin{bmatrix}
 %     \M{V}_0 & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}^\T.
 % \end{displaymath}
 % With
@@ -1413,7 +1543,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{V}_0 & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}_1,
 % \end{displaymath}
@@ -1429,12 +1559,12 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{V}_{k-1} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}^\T = [\M{U}_{k-1}, \ve{p}_k] \M{C}_k \M{S}_k \M{D}_k^\T
 %   \begin{bmatrix}
 %     \M{V}_{k-1} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}^\T,
 % \end{displaymath}
 % and with
@@ -1448,7 +1578,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \begin{bmatrix}
 %     \M{V}_{k-1} & \0
 %     \\
-%     \0^T & 1
+%     \0^\T & 1
 %   \end{bmatrix}
 %   \M{D}_k,
 % \end{displaymath}
@@ -1510,7 +1640,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 % \end{displaymath}
 % We claim that
 % \begin{equation}
-%   \label{eq:19}
+%   \label{eq:17}
 %   \M{U}_k = \Mt{U}_k \Mt{C}_k
 % \end{equation}
 % for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
@@ -1543,7 +1673,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   =
 %   [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}.
 % \end{displaymath}
-% By the inductive hypothesis, expressed as \eqref{eq:19},
+% By the inductive hypothesis, expressed as \eqref{eq:17},
 % \begin{displaymath}
 %   [\Mt{U}_k  \Mt{C}_k, \ve{p}_{k+1}] \M{C}_{k+1}
 %   =
@@ -1571,7 +1701,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %     \begin{bmatrix}
 %       \M{V}_k & \0
 %       \\
-%       \0^T & 1
+%       \0^\T & 1
 %     \end{bmatrix}
 %              \M{D}_{k+1}
 %              =
@@ -1579,11 +1709,11 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %                \begin{bmatrix}
 %                  \M{V}_{k-1} & \0
 %                  \\
-%                  \0^T & 1
+%                  \0^\T & 1
 %                \end{bmatrix}
 %                \M{D}_k & \0
 %                \\
-%                \0^T & 1
+%                \0^\T & 1
 %              \end{bmatrix}
 %                       \M{D}_{k+1}
 %   \\
@@ -1592,11 +1722,11 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %       \begin{bmatrix}
 %         \M{V}_{k-1} & \0
 %         \\
-%         \0^T & 1
+%         \0^\T & 1
 %       \end{bmatrix}
 %       & \0
 %       \\
-%       \0^T & 1
+%       \0^\T & 1
 %     \end{bmatrix}
 %              \begin{bmatrix}
 %                \M{D}_k & \0
@@ -1658,7 +1788,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 % \end{displaymath}
 % We claim that
 % \begin{equation}
-%   \label{eq:20}
+%   \label{eq:18}
 %   \M{V}_k = \Mt{V}_k \Mt{D}_k
 % \end{equation}
 % for each $k \in \N$.  Indeed, the claim holds vacuously for $k = 1$. Assume that the claim holds for $k$. Then, since
@@ -1706,7 +1836,7 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   \end{bmatrix}
 %   \M{D}_{k+1}.
 % \end{displaymath}
-% By the inductive hypothesis, expressed as \eqref{eq:20},
+% By the inductive hypothesis, expressed as \eqref{eq:18},
 % \begin{displaymath}
 %   \begin{bmatrix}
 %     \Mt{V}_k \Mt{D}_k & \0
@@ -1889,7 +2019,1478 @@ We are now in a position to present an algorithm for calculating the thin SVD of
 %   }_{\Mt{D}_{k+1}}.
 % \end{align*}
 
-\section{Downdating}
+\section{Zeroing and downdating}
+
+\subsection{Preliminaries}
+
+For two integers $a$ and $b$ with $a \leq b$, let $\Brackets{a,b}$ denote the interval of all integers between $a$ and $b$, with $a$ and $b$ included. When $a$ is an integer no smaller than $1$, $\Brackets{1,a}$ is abbreviated to $\Brackets{a}$. The symbol $\SemiOpenBrackets{a, \infty}$ will denote the interval of all integers no smaller than $a$.
+
+Given $N \in \N$ and $n \in \Brackets{N}$, let $\eve{n}{N} = [0, \dots, 0, 1, 0, \dots, 0]^\T$ be the length-$N$ vector with $1$ in the $n$-th position and $0$ in all others.
+
+Given $p \in \SemiOpenBrackets{2,\infty}$ and $i \in \Brackets{p}$, let $\sel{i}{p}$ denote the $(p-1) \times p$ \emph{selection matrix} given by
+\begin{align*}
+  \sel{i}{p}
+  & =
+    [\eve{1}{p-1}, \dots, \eve{i-1}{p-1},
+    \0_{p-1}, \eve{i}{p-1}, \dots, \eve{p-1}{p-1}]
+  \\
+  & =
+    \eve{1}{p-1}\big(\eve{1}{p}\big)^\T
+    +
+    \dots
+    +
+    \eve{i-1}{p-1}\big(\eve{i-1}{p}\big)^\T
+  \\
+  & \quad
+    +
+    \eve{i}{p-1}\big(\eve{i+1}{p}\big)^\T
+    +
+    \dots
+    +
+    \eve{p-1}{p-1}\big(\eve{p}{p}\big)^\T.
+\end{align*}
+To get an idea of the shape of selection matrices, consider the following example:
+\begin{displaymath}
+  \sel{3}{5}
+  =
+  \begin{bmatrix}
+    1 & 0 & 0 & 0 & 0
+    \\
+    0 & 1 & 0 & 0 & 0
+    \\
+    0 & 0 & 0 & 1 & 0
+    \\
+    0 & 0 & 0 & 0 & 1
+  \end{bmatrix}.
+\end{displaymath}
+The rationale for the term ``selection matrix'' is that selection matrices can be used to select a subset of columns or rows of a matrix---see \eqref{eq:20} below.
+
+Let $\M{A} \in \Mat{p}{q}$, and let $i \in \Brackets{p}$ and $j \in \Brackets{q}$. Let $\zerrow{A}{i}$ denote the $p \times q$ matrix resulting from replacing the $i$th row of $\M{A}$ by a zero row vector, and let $\zercol{A}{j}$ denote the $p \times q$ matrix resulting from by replacing the $j$th column of $\M{A}$ by a zero column vector.  We have
+\begin{equation}
+  \label{eq:19}
+  \zerrow{A}{i} = \M{A} - \eve{i}{p} (\eve{i}{p})^\T \M{A} 
+  \quad
+  \text{and}
+  \quad
+  \zercol{A}{j} = \M{A} - \M{A} \eve{j}{q} (\eve{j}{q})^\T.
+\end{equation}
+
+Supposing that $p \geq 2$, let $\delrow{A}{i}$ denote the $(p - 1) \times q$ matrix resulting from deleting the $i$th row from $\M{A}$, and supposing that $q \geq 2$, let $\delcol{A}{j}$ denote the $p \times (q - 1)$ matrix resulting from deleting the $j$th column from $\M{A}$.  It turns out that
+\begin{equation}
+  \label{eq:20}
+  \delrow{A}{i} = \sel{i}{p} \M{A}
+  \quad
+  \text{and}
+  \quad
+  \delcol{A}{j} = \M{A} \sel{j}{q}^\T.
+\end{equation}
+
+\subsection{The method}
+
+Let $\M{X} \in \Mat{p}{q}$ be a matrix of rank $r \geq 1$, and let the thin SVD of $\M{X}$ be given as in \eqref{eq:1}. Let $j \in \Brackets{q}$. We are interested in finding formulas for the thin SVD of $\zercol{X}{j}$ and $\delcol{X}{j}$.
+
+The key to obtaining the relevant expressions is the representation
+\begin{equation}
+  \label{eq:21}
+  \zercol{X}{j}
+  =
+  [\M{U}, \0] \M{K} [\M{V}, \ve{q}]^\T,
+\end{equation}
+where $\ve{q} \in \R^q$ is given by
+\begin{displaymath}
+  \ve{q} =
+  \begin{cases}
+    \frac{\eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}}{\| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|} & \text{if $\eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q} \neq \0$,}
+    \\
+    \0 & \text{otherwise,}
+  \end{cases}
+\end{displaymath}
+and $\M{K} \in \Mat{(r+1)}{(r+1)}$ is given by
+\begin{displaymath}
+  \M{K}
+  =
+  \begin{bmatrix}
+    \M{S} & \0
+    \\
+    \0^\T & 0
+  \end{bmatrix}
+  \left(
+    \M{I}_{r+1}
+    -
+    \begin{bmatrix}
+      \M{V}^\T \eve{j}{q}
+      \\
+      0
+    \end{bmatrix}
+    \begin{bmatrix}
+      \M{V}^\T \eve{j}{q}
+      \\[1.5ex]
+      \sqrt{1 - \| \M{V}^\T \eve{j}{q} \|^2}
+    \end{bmatrix}^\T \right).
+\end{displaymath}
+We immediately point out that the occurrence of $\sqrt{1 - \| \M{V}^\T \eve{j}{q} \|^2}$ in the expression for $\M{K}$ reflects the fact that
+\begin{equation}
+  \label{eq:22}
+  \sqrt{1 - \| \M{V}^\T \eve{j}{q} \|^2}
+  =
+  \| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|.
+\end{equation}
+To prove the above equality, note that
+\begin{align*}
+  \| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|^2
+  & =
+    \| \eve{j}{q} \|^2 +  \| \M{V} \M{V}^\T \eve{j}{q}\|^2
+    - 2 \big(\eve{j}{q}\big)^\T \M{V} \M{V}^\T \eve{j}{q}
+  \\
+  & =
+    1 + \| \M{V} \M{V}^\T \eve{j}{q}\|^2 - 2 \| \M{V}^\T \eve{j}{q} \|^2.
+\end{align*}
+Now
+\begin{displaymath}
+  \| \M{V} \M{V}^\T \eve{j}{q}\|^2
+  =
+  \big(\eve{j}{q}\big)^\T \M{V} \M{V}^\T \M{V} \M{V}^\T \eve{j}{q}
+  =
+  \big(\eve{j}{q}\big)^\T \M{V} \M{V}^\T \eve{j}{q}
+  =
+  \| \M{V}^\T \eve{j}{q} \|^2,
+\end{displaymath}
+and hence
+\begin{displaymath}
+  \| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|^2
+  =
+  1 + \| \M{V}^\T \eve{j}{q} \|^2 - 2 \| \M{V}^\T \eve{j}{q} \|^2
+  =
+  1 -  \| \M{V}^\T \eve{j}{q} \|^2,
+\end{displaymath}
+which establishes \eqref{eq:22}.
+
+Let $k$ be the rank of $\M{K}$.  We claim that
+\begin{equation}
+  \label{eq:23}
+  k =
+  \begin{cases}
+    r  & \text{if $\ve{q} \neq \0$},
+    \\
+    r -1 & \text{otherwise}.
+  \end{cases}
+\end{equation}
+Indeed, expanding out the expression for $\M{K}$, we obtain
+\begin{equation}
+  \label{eq:24}
+  \M{K}
+  =
+  \begin{bmatrix}
+    \M{S}
+    \left(
+      \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+    \right)
+    &
+    - \sqrt{1 - \| \M{V}^\T \eve{j}{q} \|^2} \M{S}  \M{V}^\T \eve{j}{q} 
+    \\
+    \0^\T & 0 
+  \end{bmatrix}.
+\end{equation}
+Since the last row of $\M{K}$ is zero and $\M{K}$ is a $(r+1) \times (r+1)$ matrix, we have $k \leq r$. If $\ve{q} \neq 0$, then, in view of \eqref{eq:22},
+\begin{displaymath}
+   1 - \| \M{V}^\T \eve{j}{q} \|^2
+  =
+  \| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|^2
+  \neq 0
+\end{displaymath}
+and, moreover,
+\begin{math}
+  \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+\end{math}
+is invertible, with inverse
+\begin{displaymath}
+  \left(
+    \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+  \right)^{-1}
+  =
+  \M{I}_r
+  +
+  \frac{1}{1 - \| \M{V}^\T \eve{j}{q} \|^2}
+  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T.
+\end{displaymath}
+Since $\M{S}$ is invertible, this implies that
+\begin{math}
+  \M{S}
+    \left(
+      \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+    \right)
+\end{math}
+is invertible. As, in view of \eqref{eq:24}, 
+\begin{math}
+  \M{S}
+    \left(
+      \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+    \right)
+\end{math}
+is a $r \times r$ submatrix of $\M{K}$, we have $k \geq r$. Combining this inequality together with the converse inequality established earlier yields $k = r$. If $\ve{q} = \0$, then
+\begin{math}
+  \| \M{V}^\T \eve{j}{q} \| = 1.
+\end{math}
+In particular,
+\begin{equation}
+  \label{eq:25}
+   \M{K}
+  =
+  \begin{bmatrix}
+    \M{S}
+    \left(
+      \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+    \right)
+    &
+    \0
+    \\
+    \0^\T & 0 
+  \end{bmatrix}.
+\end{equation}
+Moreover,
+\begin{displaymath}
+  \M{S}
+  \left(
+    \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+  \right)
+  \M{V}^\T \eve{j}{q}
+  =
+  \M{S}
+  \left(
+  \M{V}^\T \eve{j}{q}
+  - \| \M{V}^\T \eve{j}{q} \|^2 \M{V}^\T \eve{j}{q}
+  \right)
+  = \0, 
+\end{displaymath}
+so $\M{V}^\T \eve{j}{q}$ is a null vector of
+\begin{math}
+   \M{S}
+    \left(
+      \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+    \right).
+  \end{math}
+Therefore
+\begin{math}
+  \M{S}
+  \left(
+    \M{I}_r -  \M{V}^\T \eve{j}{q} \big(\M{V}^\T \eve{j}{q} \big)^\T
+  \right)
+\end{math}
+is singular, and as such has rank no greater than $r - 1$. In view of \eqref{eq:25}, this implies that $k \leq r-1$. On the other hand, since the rank of $\zercol{X}{j}$ is at least $r - 1$ and since, on account of \eqref{eq:21}, the rank of $\zercol{X}{j}$ is no greater than $k$, we have $r -1 \leq k$. Thus, in fact, $k = r - 1$. The claim is established.
+
+Let
+\begin{equation}
+  \label{eq:26}
+  \M{K} = \M{C} \M{S}' \M{D}^\T
+\end{equation}
+be the thin SVD of $\M{K}$, with $\M{C} \in \Mat{(r+1)}{k}$, $\M{S}' \in \Mat{k}{k}$, and $\M{D} \in \Mat{(r+1)}{k}$. Let $\M{U}' \in \Mat{p}{k}$ be given by
+\begin{equation}
+  \label{eq:27}
+  \M{U}' = [\M{U}, \0] \M{C},
+\end{equation}
+let $\M{V}' \in \Mat{q}{k}$ be given by
+\begin{equation}
+  \label{eq:28}
+  \M{V}' = [\M{V}, \ve{q}] \M{D},
+\end{equation}
+and, supposing that $q \geq 2$, let $\M{V}'' \in \Mat{(q-1)}{k}$ be given by
+\begin{equation}
+  \label{eq:29}
+  \M{V}'' = \delrow{V'}{j}.
+\end{equation}
+
+\begin{result}
+  \label{res:2}
+  We have
+  \begin{equation}
+    \label{eq:30}
+    \zercol{X}{j} = \M{U}' \M{S}' \M{V}'^\T,
+  \end{equation}
+  and this representation is the thin SVD of $\zercol{X}{j}$.
+\end{result}
+
+\begin{proof}
+  Formula~\eqref{eq:30} follows immediately from combining \eqref{eq:21}, \eqref{eq:26}, \eqref{eq:27}, and \eqref{eq:28}.  Since $\M{S}'$ is a diagonal matrix with positive elements in descending order, it remains only show that $\M{U}'$ and $\M{V}' $ have unit-norm, orthogonal columns, that is,
+  \begin{math}
+    \M{U}'^\T \M{U}' = \M{I}_k
+  \end{math}
+  and
+  \begin{math}
+    \M{V}'^\T \M{V}' = \M{I}_k.
+  \end{math}
+  
+  Note that
+  \begin{equation}
+    \label{eq:31}
+    \begin{split}
+      \M{U}'^\T \M{U}' & = \M{C}^\T [\M{U}, \0]^\T [\M{U}, \0] \M{C}
+      = \M{C}^\T
+      \begin{bmatrix}
+        \M{U}^\T \M{U} & \0 \\
+        \0^\T & 0
+      \end{bmatrix}
+      \M{C}
+      \\
+      & = \M{C}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0\\
+        \0^\T & 0
+      \end{bmatrix}
+      \M{C}.
+    \end{split}
+  \end{equation}
+  Since, as is apparent from \eqref{eq:24}, each column of $\M{K}$ has zero last entry and since the column space of $\M{C}$ coincides with the column space of $\M{K}$, it follows that each column of $\M{C}$ has zero last entry. In other words,
+  \begin{equation}
+    \label{eq:32}
+  \M{C} =
+  \begin{bmatrix}
+    \M{C}^{1:r, :}
+    \\
+    \0^\T
+  \end{bmatrix},
+\end{equation}
+where $\M{C}^{1:r, :} = \M{C}^{1:r,1:k} \in \Mat{r}{k}$.  Therefore
+  \begin{align*}
+    \M{C}^\T
+    \begin{bmatrix}
+      \M{I}_r & \0 \\
+      \0^\T & 0
+    \end{bmatrix}
+             \M{C} & =
+                     [(\M{C}^{1:r, :})^\T, \0]
+                     \begin{bmatrix}
+                       \M{I}_r & \0 \\
+                       \0^\T & 0
+                     \end{bmatrix}
+                              \begin{bmatrix}
+                                \M{C}^{1:r,:}
+                                \\
+                                \0^\T
+                              \end{bmatrix}
+    \\ & =
+                [(\M{C}^{1:r, :})^\T, \0]
+                \begin{bmatrix}
+                  \M{C}^{1:r,:}
+                  \\
+                  \0^\T
+                \end{bmatrix}
+    = \M{C}^\T \M{C} = \M{I}_k.
+  \end{align*}
+  Combining this with \eqref{eq:31} yields
+    \begin{math}
+      \M{U}'^\T \M{U'} = \M{I}_k.
+    \end{math}
+
+  Next note that
+  \begin{equation}
+    \label{eq:33}
+    \begin{split}
+    \M{V}'^\T \M{V}'
+    & =  \M{D}^\T [\M{V}, \ve{q}]^\T [\M{V}, \ve{q}] \M{D} =
+    \M{D}^\T
+    \begin{bmatrix}
+        \M{V}^\T \M{V} & \M{V}^\T \ve{q} \\
+        \ve{q}^\T \M{V} & \| \ve{q} \|^2
+      \end{bmatrix}
+      \M{D}
+      \\
+      & = \M{D}^\T
+      \begin{bmatrix}
+        \M{I}_r & \M{V}^\T \ve{q} \\
+        \ve{q}^\T \M{V} & \| \ve{q} \|^2
+      \end{bmatrix}
+      \M{D}.
+  \end{split}
+\end{equation}
+  If $\ve{q} = \0$, then, obviously, $\M{V}^\T \ve{q} = \0$.  If $\ve{q} \neq \0$, then
+  \begin{displaymath}
+    \M{V}^\T \ve{q}
+    =
+    \frac{\M{V}^\T\eve{j}{q} - \M{V}^\T\M{V} \M{V}^\T \eve{j}{q}}{\| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|}
+    =
+    \frac{\M{V}^\T\eve{j}{q} - \M{I}_r \M{V}^\T \eve{j}{q}}{\| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|}
+    =
+    \frac{\M{V}^\T\eve{j}{q} - \M{V}^\T \eve{j}{q}}{\| \eve{j}{q} - \M{V} \M{V}^\T \eve{j}{q}\|}
+    =
+    \0.
+  \end{displaymath}
+  Thus in either case $\M{V}^\T \ve{q} = \0$. Moreover, $\ve{q}^\T \M{V} = (\M{V}^\T \ve{q})^\T = \0^\T$. Hence
+  \begin{displaymath}
+    \begin{bmatrix}
+      \M{I}_r & \M{V}^\T \ve{q} \\
+      \ve{V}^\T \M{U} & \| \ve{q} \|^2
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      \M{I}_r & \0 \\
+      \0^\T& \| \ve{q} \|^2
+    \end{bmatrix}.
+  \end{displaymath}
+  We now consider two cases.
+  \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+    \item Suppose that $\ve{q} \neq \0$ (in which case $k = r$). Then $\| \ve{q} \| = 1$ and
+    \begin{equation}
+      \label{eq:34}
+      \begin{bmatrix}
+        \M{I}_r & \M{V}^\T \ve{q}
+        \\
+        \ve{q}^\T \M{V} & \| \ve{q} \|^2
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T& 1
+      \end{bmatrix}.
+    \end{equation}
+    Moreover,
+    \begin{displaymath}
+      \M{D}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T& 1
+      \end{bmatrix}
+      \M{D}
+      =
+      \M{D}^\T \M{I}_{r+1} \M{D}
+      =
+      \M{D}^\T \M{D}
+      = \M{I}_k.
+    \end{displaymath}
+    Combining this with \eqref{eq:33} and \eqref{eq:34}, we see that
+    \begin{math}
+      \M{V}'^\T \M{V}' = \M{I}_k.
+    \end{math}
+  \item Suppose that $\ve{q} = \0$ (in which case $k = r-1$). Then
+    \begin{equation}
+      \label{eq:35}
+      \begin{bmatrix}
+        \M{I}_r & \M{V}^\T \ve{q} \\
+        \ve{q}^\T \M{V} & \| \ve{q} \|^2
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T & 0
+      \end{bmatrix}.
+    \end{equation}
+    Since, on account of \eqref{eq:25}, each row of $\M{K}$ has zero last entry and since the column space of $\M{D}$ coincides with the transposed row space of $\M{K}$, it follows that each column of $\M{D}$ has zero last entry. In other words,
+    \begin{equation}
+      \label{eq:36}
+      \M{D}
+      =
+      \begin{bmatrix}
+        \M{D}^{1:r, :}
+        \\
+        \0^\T
+      \end{bmatrix},
+    \end{equation}
+    where $\M{D}^{1:r, :} = \M{D}^{1:r,1:k} \in \Mat{r}{k}$.  Consequently,
+    \begin{align*}
+      \M{D}^\T
+      \begin{bmatrix}
+        \M{I}_r & \0 \\
+        \0^\T & 0
+      \end{bmatrix}
+               \M{D}
+             & =
+               [(\M{D}^{1:r, :})^\T, \0]
+               \begin{bmatrix}
+                 \M{I}_r & \0 \\
+                 \0^\T & 0
+               \end{bmatrix}
+                        \begin{bmatrix}
+                          \M{D}^{1:r, :}
+                          \\
+                          \0^\T
+                        \end{bmatrix}
+      \\ & =
+                [(\M{D}^{1:r, :})^\T, \0]
+                \begin{bmatrix}
+                  \M{D}^{1:r, :}
+                  \\
+                  \0^\T
+                \end{bmatrix}
+    = \M{D}^\T \M{D} = \M{I}_k.
+    \end{align*} 
+    Combining this with \eqref{eq:33}, \eqref{eq:35}, we conclude that
+    \begin{math}
+      \M{V}'^\T \M{V}' = \M{I}_k.
+    \end{math}
+  \end{enumerate}
+  Thus in either of the considered cases, 
+  \begin{math}
+    \M{V}'^\T \M{V}' = \M{I}_k.
+  \end{math}
+\end{proof}
+
+An immediate consequence of Result~\ref{res:2} is the following fact.
+
+\begin{result}
+  \label{res:3}
+  Suppose that $q \geq 2$. We have
+  \begin{equation}
+    \label{eq:37}
+    \delcol{X}{j} = \M{U}' \M{S}' \M{V}''^\T,
+  \end{equation}
+  and this representation is the thin SVD of $\delcol{X}{j}$.
+\end{result}
+
+\begin{proof}
+  In accordance with \eqref{eq:20},
+  \begin{equation}
+    \label{eq:38}
+    \delcol{X}{j} = \M{X} \sel{j}{q}^\T.
+  \end{equation}
+  Since, as one directly verifies,
+  \begin{displaymath}
+    \sel{j}{q} \eve{j}{q} = \0,
+  \end{displaymath}
+  we have
+  \begin{displaymath}
+    \M{X} \sel{j}{q}^\T
+    =
+    \M{X} \sel{j}{q}^\T
+    - \M{X} \eve{j}{q} (\sel{j}{q} \eve{j}{q})^\T
+    = 
+    (\M{X} - \M{X} \eve{j}{q} (\eve{j}{q})^\T ) \sel{j}{q}^\T.
+  \end{displaymath}
+  By \eqref{eq:19},
+  \begin{displaymath}
+    \zercol{X}{j} = \M{X} - \M{X} \eve{j}{q} (\eve{j}{q})^\T,
+  \end{displaymath}
+  and so
+  \begin{displaymath}
+    \M{X} \sel{j}{q}^\T =  (\zercol{X}{j}) \sel{j}{q}^\T.
+  \end{displaymath}
+  On account of \eqref{eq:38}, this can be restated as
+  \begin{displaymath}
+    \delcol{X}{j} = (\zercol{X}{j}) \sel{j}{q}^\T.
+  \end{displaymath}
+  Combining the above equality with \eqref{eq:30}, we see that
+  \begin{equation}
+    \label{eq:39}
+    \delcol{X}{j} = \M{U}' \M{S}' \M{V}'^\T \sel{j}{q}^\T
+    = \M{U}' \M{S}'
+    (\sel{j}{q} \M{V}')^\T.
+  \end{equation}
+  In view of \eqref{eq:20} and \eqref{eq:29},
+  \begin{displaymath}
+    \M{V}'' = \delrow{V'}{j} = \sel{j}{q} \M{V}'.
+  \end{displaymath}
+  Therefore \eqref{eq:39} immediately yields \eqref{eq:37}. Since
+  \begin{math}
+    \M{U}'^\T \M{U}' = \M{I}_k
+  \end{math}
+  and since $\M{S}'$ is a diagonal matrix with positive elements in descending order, to conclude the proof, we need only show that
+  \begin{math}
+    \M{V}''^\T \M{V}'' = \M{I}_k.
+  \end{math}
+
+  To this end, note that
+  \begin{displaymath}
+    \M{V}''^\T  \M{V}'' = \M{V}'^\T \sel{j}{q} \sel{j}{q}^\T \M{V}'.
+  \end{displaymath}
+  One verifies at once that
+  \begin{displaymath}
+    \sel{j}{q} \sel{j}{q}^\T = \M{I}_q -  \eve{j}{q} (\eve{j}{q})^\T.
+  \end{displaymath}
+  Since the column space of $\M{V}'$ coincides with the transposed row space of $\zercol{X}{j}$ and since the transpose of $\zercol{X}{j}$ has zero $j$th row, $\M{V}'$ has zero $j$th row. In other words,
+  \begin{displaymath}
+    (\eve{j}{q})^\T \M{V}' = \0^\T.
+  \end{displaymath}
+  Consequently,
+  \begin{displaymath}
+    \M{V}'^\T \sel{j}{q} \sel{j}{q}^\T \M{V}'
+    =
+    \M{V}'^\T (\M{I}_q -  \eve{j}{q} (\eve{j}{q})^\T) \M{V}'
+    =
+    \M{V}'^\T \M{V}'^\T.
+  \end{displaymath}
+  But
+  \begin{math}
+    \M{V}'^\T \M{V}'^\T = \M{I}_k.
+  \end{math}
+  Therefore
+  \begin{math}
+    \M{V}'^\T \sel{j}{q} \sel{j}{q}^\T \M{V}' = \M{I}_k,
+  \end{math}
+  which is the same as
+  \begin{math}
+    \M{V}''^\T \M{V}'' = \M{I}_k.
+  \end{math}
+\end{proof}
+
+\begin{remark}
+  \label{rmk:2}
+  Comparing \eqref{eq:26} and \eqref{eq:30}, we see that the SVD of $\M{K}$ and the SVD of $\zercol{X}{j}$ share the diagonal part $\M{S}'$.  It follows that $\M{K}$ and $\zercol{X}{j}$ have the same rank. A moment's reflection shows that
+  \begin{equation}
+    \label{eq:40}
+    \rk \big( \delcol{X}{j} \big)  =
+    \begin{cases}
+      r & \text{if $\M{X}^{:,j} \in \col \big( \zercol{X}{j} \big)$},
+      \\
+      r - 1 & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+  Here $\M{X}^{:,j}$ denotes the $j$th column of $\M{X}$ and $r$ is the rank of $\M{X}$. We shall shortly show that
+  \begin{align}
+    \label{eq:41}
+    \M{X}^{:,j} \notin \col (\zercol{X}{j})
+    \quad
+    \text{if and only if}
+    \quad
+    \eve{j}{q} = \M{V} \M{V}^\T \eve{j}{q}.
+  \end{align}
+  Clearly, $\eve{j}{q} = \M{V} \M{V}^\T \eve{j}{q}$ holds if and only if
+  \begin{math}
+    \ve{q} = \0.
+  \end{math}
+  Thus \eqref{eq:40}  is equivalent to \eqref{eq:23}. In other words, $k = r$ if the $j$th column of $\M{X}$ is in the linear span of the columns of $\zercol{X}{j}$, and $k = r-1$ if the $j$th column of $\M{X}$ is outside the linear span of the columns of $\zercol{X}{j}$. Note that the linear span of the columns of $\zercol{X}{j}$ is the same as the linear span of all but $j$th column of~$\M{X}$.
+
+  We now proceed to establish equivalence \eqref{eq:41}.
+  \begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+  \item Suppose first that $\M{X}^{:,j} \notin \col \big( \zercol{X}{j} \big)$. Then there exists a vector $\ve{f} \in \Mat{p}{1}$ which is orthogonal to $\col \big( \zercol{X}{j} \big)$, but not orthogonal to $\M{X}^{:,j}$. In view of \eqref{eq:19} and the fact that $\M{X}^{:,j}$ is the same as $\M{X}\eve{j}{q}$, the properties of $\ve{f}$ can be expressed as
+    \begin{equation}
+      \label{eq:42}
+      \ve{f}^\T \big(\M{X} - \M{X} \eve{j}{q} (\eve{j}{q})^\T \big) = \0^\T
+      \quad
+      \text{and}
+      \quad
+      \ve{f}^\T \M{X}\eve{j}{q} \neq 0.
+    \end{equation}
+    By taking the transpose, the first of these relations can be written as
+    \begin{displaymath}
+      \big( \M{X}^\T -  \eve{j}{q} (\eve{j}{q})^\T \M{X}^\T \big) \ve{f} = \0,
+    \end{displaymath}
+    and hence as
+    \begin{equation}
+      \label{eq:43}
+      \M{X}^\T \ve{f}
+      =
+      \big( (\eve{j}{q})^\T \M{X}^\T \ve{f} \big) \eve{j}{q}.
+    \end{equation}
+    Taking into account that
+    \begin{math}
+      (\eve{j}{q})^\T \M{X}^\T \ve{f} = \ve{f}^\T \M{X}\eve{j}{q}
+    \end{math}
+    and using the second relation of \eqref{eq:42}, we may meaningfully set
+    \begin{displaymath}
+      \ve{g} = \big( (\eve{j}{q})^\T \M{X}^\T \ve{f} \big)^{-1} \ve{f}.
+    \end{displaymath}
+    Then \eqref{eq:43} becomes
+    \begin{displaymath}
+      \eve{j}{q} = \M{X}^\T \ve{g}.
+    \end{displaymath}
+    Now, taking into account that, by \eqref{eq:1}, $\M{X}^\T = \M{V} \M{S} \M{U}^\T$, and that $\M{V}^\T \M{V} = \M{I}_r$, we obtain
+    \begin{align*}
+      \M{V} \M{V}^\T \eve{j}{q}
+      & =
+        \M{V} \M{V}^\T \M{X}^\T \ve{g}
+        =
+        \M{V} \M{V}^\T \M{V} \M{S} \M{U}^\T \ve{g}
+      \\
+      & =
+        \M{V} \M{I}_r \M{S} \M{U}^\T \ve{g}
+        =
+        \M{V} \M{S} \M{U}^\T \ve{g}
+        =
+        \M{X}^\T \ve{g}
+        =
+        \eve{j}{q}.
+    \end{align*}
+    This establishes the $\Rightarrow$ part of equivalence \eqref{eq:41}.
+  \item Suppose next that $\eve{j}{q} = \M{V} \M{V}^\T \eve{j}{q}$. Then
+    \begin{displaymath}
+      \M{V} \M{V}^\T \eve{j}{q}
+      =
+      \M{V} \M{S} \M{U}^\T \M{U} \M{S}^{-1} \M{V}^\T \eve{j}{q}
+      =
+      \M{X}^\T \M{U} \M{S}^{-1} \M{V}^\T \eve{j}{q}.
+    \end{displaymath}
+    Setting
+    \begin{math}
+      \ve{h} = \M{U} \M{S}^{-1} \M{V}^\T \eve{j}{h},
+    \end{math}
+    we have
+    \begin{displaymath}
+      \eve{j}{q} = \M{X}^\T \ve{h}.
+    \end{displaymath}
+    Hence
+    \begin{equation}
+      \label{eq:44}
+      (\eve{j}{q})^\T \M{X}^\T \ve{h}
+      =
+      (\eve{j}{q})^\T \eve{j}{q}
+      =
+      \| \eve{j}{q} \|^2
+      = 1.
+    \end{equation}
+    Moreover,
+    \begin{displaymath}
+      \M{X}^\T \ve{h}
+      = \eve{j}{q}
+      = \big((\eve{j}{q})^\T \M{X}^\T \ve{h} \big) \eve{j}{q},
+    \end{displaymath}
+    which can be expressed as
+    \begin{displaymath}
+      \big( \M{X}^\T -  \eve{j}{q} (\eve{j}{q})^\T \M{X}^\T \big) \ve{h} = \0,
+    \end{displaymath}
+    and further as
+    \begin{displaymath}
+      \ve{h}^\T \big(\M{X} - \M{X} \eve{j}{q} (\eve{j}{q})^\T \big) = \0^\T.
+    \end{displaymath}
+    Thus $\ve{h}$ is orthogonal to $\col \big( \zercol{X}{j} \big)$. On the other hand, since, by \eqref{eq:44},
+    \begin{displaymath}
+      \ve{h}^\T \M{X}\eve{j}{q}
+      =
+      (\eve{j}{q})^\T \M{X}^\T \ve{h}
+      =
+      1
+    \end{displaymath}
+    and since $\M{X}^{:,j} = \M{X}\eve{j}{q}$, we see that $\ve{h}$ is not orthogonal to $\M{X}^{:,j}$. Consequently, $\M{X}^{:,j} \notin \col (\zercol{X}{j})$. The $\Leftarrow$ part of equivalence \eqref{eq:41} is established, and so is the entire equivalence.
+  \end{enumerate}
+\end{remark}
+
+\subsection{Calculating $\M{U}$ and $\M{V}$ iteratively}
+
+Suppose that the matrices $\M{U}$ and $\M{V}$ appearing in \eqref{eq:1} can be represented as
+\begin{equation}
+  \label{eq:45}
+  \M{U} = \Mt{U} \Mt{C},
+\end{equation}
+where $\Mt{U} \in \Mat{p}{r}$ and $\Mt{C} \in \Mat{r}{r}$, and
+\begin{equation}
+  \label{eq:46}
+  \M{V} = \Mt{V} \Mt{D}, 
+\end{equation}
+where $\Mt{V} \in \Mat{q}{r}$ and $\Mt{D} \in \Mat{r}{r}$.  Then, as it turns out, the matrices $\M{U}'$ and $\M{V}'$ given in \eqref{eq:27} and \eqref{eq:28} can also be represented in a similar fashion as
+\begin{equation}
+  \label{eq:47}
+  \M{U}' = \Mt{U} \Mt{C}', 
+\end{equation}
+where $\Mt{C}' \in \Mat{r}{k}$, and
+\begin{equation}
+  \label{eq:48}
+  \M{V}' = \Mt{V}' \Mt{D}', 
+\end{equation}
+where $\Mt{V}' \in \Mat{q}{(k+1)}$ and $\Mt{D}' \in \Mat{(k+1)}{k}$.  Moreover, supposing that $q \geq 2$, if we let
+\begin{equation}
+  \label{eq:49}
+  \Mt{V}'' =  \delrow{\Mt{V}'}{j},
+\end{equation}
+then, on account of \eqref{eq:48}, the matrix $\M{V}''$ given in \eqref{eq:29} can be represented as
+\begin{equation}
+  \label{eq:50}
+  \M{V}''= \Mt{V}'' \Mt{D}'.
+\end{equation}
+The explicit formulae for $\Mt{C}'$, $\Mt{V}'$, and $\Mt{D}'$, which we shall derive next, are intended to be used iteratively to obtain an expression for the thin SVD of a matrix formed by zeroing in succession a number of columns to a given matrix, and to obtain a companion expression for the thin SVD of a matrix formed by subtracting in succession a number of columns to a given matrix.
+
+\subsubsection{A formula for $\M{U}'$}
+
+In view of \eqref{eq:27}, \eqref{eq:32}, and \eqref{eq:45},
+\begin{displaymath}
+  \M{U}'
+  % = [\M{U}, \0] \M{C}
+  = [\M{U}, \0]
+  \begin{bmatrix}
+    \M{C}^{1:r, :}
+    \\
+    \0^\T
+  \end{bmatrix}
+  = \M{U} \M{C}^{1:r, :}
+  = \Mt{U} \Mt{C}  \M{C}^{1:r, :}.
+\end{displaymath}
+We now obtain the desired representation
+\begin{math}
+  \M{U}' = \Mt{U} \Mt{C}'
+\end{math}
+by letting
+\begin{displaymath}
+  % \Mt{U}' = \Mt{U}
+  % \quad
+  % \text{and}
+  % \quad
+  \Mt{C}' = \Mt{C}  \M{C}^{1:r, :}.
+\end{displaymath}
+Since $\Mt{C} \in \Mat{r}{r}$ and $\M{C}^{1:r, :} \in \Mat{r}{k}$, it is clear that $\Mt{C}' \in \Mat{r}{k}$. Moreover, since $k = r$ if $\ve{q} \neq \0$ and since $k = r - 1$ if $\ve{q} = \0$, the $r \times k$ matrix $\M{C}^{1:r,:}$ takes the form
+\begin{displaymath}
+  \M{C}^{1:r, :}
+  =
+  \begin{cases}
+    \M{C}^{1:r, 1:r} & \text{if $\ve{q} \neq \0$},
+    \\
+    \M{C}^{1:r, 1:(r-1)} & \text{otherwise}.
+  \end{cases}
+\end{displaymath}
+Therefore
+\begin{displaymath}
+  \Mt{C}' 
+  =
+  \begin{cases}
+    \Mt{C}  \M{C}^{1:r, 1:r} & \text{if $\ve{q} \neq \0$},
+    \\
+    \Mt{C}  \M{C}^{1:r, 1:(r-1)} & \text{otherwise}.
+  \end{cases}
+\end{displaymath}
+
+\subsubsection{A formula for $\M{V}'$}
+
+We consider two cases.
+
+\begin{enumerate}[font=\upshape,label=(\roman*),wide,align=right]
+\item Suppose that $\ve{q} \neq \0$ (or, equivalently, that $k=r$).  Then,
+  in view of \eqref{eq:28} and \eqref{eq:46},
+  \begin{displaymath}
+    \M{V}'
+    % = [\M{V}, \ve{q}] \M{D}
+    =
+    [\Mt{V} \Mt{D}, \ve{q}] \M{D}
+    =
+     [\Mt{V}, \ve{q}] 
+    \begin{bmatrix}
+      \Mt{D} & \0
+      \\
+      \0^\T & 1
+    \end{bmatrix}
+    \M{D}
+  \end{displaymath}
+%
+%   
+% \begin{displaymath}
+%   \M{V}' =
+%   \begin{bmatrix}
+%     \M{V} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \begin{bmatrix}
+%     \Mt{D} & \0
+%     \\
+%     \0^\T & 1
+%   \end{bmatrix}
+%   \M{D}.
+% \end{displaymath}
+%
+%
+Accordingly, we obtain the representation
+\begin{math}
+  \M{V}' = \Mt{V}' \Mt{D}'
+\end{math}
+by letting
+\begin{displaymath}
+  \Mt{V}' = [\Mt{V}, \ve{q}]
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}' =
+  \begin{bmatrix}
+    \Mt{D} & \0
+    \\
+    \0^\T & 1
+  \end{bmatrix}
+  \M{D}.
+\end{displaymath}
+\item Suppose that $\ve{q} = \0$ (or, equivalently, that $k = r-1$).  Then $\M{D}$ is a $(r+1) \times (r-1)$ matrix. In particular, $\M{D}^{1:r,1:} = \M{D}^{1:r,1:(r-1)}$ and the identity in \eqref{eq:36} can be written as
+  \begin{displaymath}
+    \M{D}
+    =
+    \begin{bmatrix}
+      \M{D}^{1:r,1:(r-1)}
+      \\
+      \0^\T
+    \end{bmatrix}.
+  \end{displaymath}
+  Now, by \eqref{eq:28},
+  \begin{displaymath}
+    \M{V}' = [\M{V}, \ve{q}] \M{D}
+    = [\M{V}, \0]
+    \begin{bmatrix}
+      \M{D}^{1:r,1:(r-1)}
+      \\
+      \0^\T
+    \end{bmatrix}
+    =
+    \M{V} \M{D}^{1:r,1:(r-1)}
+    =
+    \Mt{V} \Mt{D} \M{D}^{1:r,1:(r-1)}.
+  \end{displaymath}
+  %
+  %  
+%   \begin{displaymath}
+%     \M{V}' =
+%     \begin{bmatrix}
+%       \M{V} & \0
+%       \\
+%       \0^\T & 1
+%     \end{bmatrix}
+%     \M{D}
+%     =
+%     \begin{bmatrix}
+%       \M{V} & \0
+%       \\
+%       \0^\T & 1
+%     \end{bmatrix}
+%     \begin{bmatrix}
+%       \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}
+%     =
+%     \begin{bmatrix}
+%       \M{V} \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}.
+%   \end{displaymath}
+% Furthermore, in view of \eqref{eq:14},  
+% \begin{align*}
+%   % \M{V}'
+%   % & =
+%     \begin{bmatrix}
+%       \M{V} \M{D}^{1:r,1:r}
+%       \\
+%       \M{D}^{r+1,1:r}
+%     \end{bmatrix}
+%   & =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} \M{D}^{1:r,1:r}
+%     \\
+%     \M{D}^{r+1,1:r}
+%   \end{bmatrix}
+%   =
+%   \begin{bmatrix}
+%     \Mt{V} \Mt{D} \M{D}^{1:r, 1:r}
+%     \\
+%     \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+ \Mt{D} \M{D}^{1:r, 1:r}
+%   \end{bmatrix}
+%   \\
+%   & =
+%     \begin{bmatrix}
+%       \Mt{V}
+%       \\
+%       \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+%     \end{bmatrix}
+%   \Mt{D} \M{D}^{1:r, 1:r}.
+    %   \end{align*}
+    %
+  %
+This leads to the representation
+\begin{math}
+  \M{V}' =  \Mt{V}' \Mt{D}'
+\end{math}
+with
+\begin{displaymath}
+  \Mt{V}' =  \Mt{V}
+  \quad
+  \text{and}
+  \quad
+  \Mt{D}' =
+  \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+\end{displaymath}
+\end{enumerate}
+
+% \begin{displaymath}
+%   \delcol{A}{i_1, \dots, i_k}
+%   =
+%   [ \dots [[\delcol{A}{i_1}] \varominus \mathrm{col}(i_2)]
+%    \varominus \mathrm{col}(i_3)
+%   \dots ]
+%   \varominus \mathrm{col}(i_k)
+% \end{displaymath}
+
+\subsection{Iterative zeroing}
+\label{sec:iterative-zeroing}
+
+Let $\M{X} \in \Mat{p}{q}$. Let $E$ be a proper subset of $\Brackets{q}$ with $K$ elements,
+\begin{math}
+  K \in \Brackets{q - 1}.
+\end{math}
+Let
+\begin{math}
+  \zercol{X}{E}
+\end{math}
+denote the $p \times q$ matrix resulting from zeroing the columns of $\M{X}$ with indices in $E$. If $\{j_1, \dots, j_K\}$ is a specific enumeration of $E$ (so that
+\begin{math}
+  j_1 \in \Brackets{q},
+\end{math}
+\begin{math}
+  j_2 \in \Brackets{q} \setminus \{j_1\},
+\end{math}
+\dots,
+\begin{math}
+  j_K \in \Brackets{q} \setminus \{j_1, \dots, j_{K-1}\}
+\end{math}%
+), then
+\begin{math}
+  \zercol{X}{E}
+\end{math}
+can be identified with the $p \times q$ matrix
+\begin{math}
+  \zercol{X}{j_1, \dots, j_K}
+\end{math}
+defined by
+\begin{displaymath}
+  \zercol{X}{j_1, \dots, j_K}
+  \colonequals
+  [ \dots [[\zercol{X}{j_1}] \varoslash \mathrm{col}(j_2)]
+   \varoslash \mathrm{col}(j_3)
+  \dots ]
+  \varoslash \mathrm{col}(j_K).
+\end{displaymath}
+This matrix arises by first zeroing the $j_1$th column of $\M{X}$, then zeroing the $j_2$th column of the $p \times q$ matrix obtained in the previous step, and, continuing in this way, finally zeroing the $j_K$th column in the $p \times q$ matrix obtained in the $(K-1)$th step.  The SVD of
+\begin{math}
+  \zercol{X}{j_1, \dots, j_K}
+\end{math}
+can be obtained from the SVD of $\M{X}$ by computing successively the SVD of the intermediary matrices
+\begin{math}
+  \zercol{X}{j_1, \dots, j_k},
+\end{math}
+$k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47} and \eqref{eq:48}. The following algorithm---inspired by the considerations in \cite{brand06:_fast}, but developed independently here---describes the procedure.
+
+%\pagebreak[1]
+
+\begin{algorithm}[\textnormal{\textsc{ThinSVD}(\unboldmath$\zercol{X}{j_1,j_2, \dots, j_K}$)}]
+  \rule{\textwidth}{0.4pt}
+  \begin{algorithmic}[1]
+    \Require
+    \begin{math}
+      \M{X} \in \Mat{p}{q}, 
+    \end{math}
+    \begin{math}
+      K \in \Brackets{q - 1},
+    \end{math}
+    \begin{math}
+      j_1 \in \Brackets{q},
+    \end{math}
+    \begin{math}
+      j_2 \in \Brackets{q} \setminus \{j_1\},
+    \end{math}
+    \dots,
+    \begin{math}
+      j_K \in \Brackets{q} \setminus \{j_1, \dots, j_{K-1}\},
+    \end{math}
+    \State $(\M{U}, \M{S}, \M{V}) \gets \textsc{ThinSVD}(\M{X})$
+    \State $r \gets \textsc{NumberOfColums/Rows}(\M{S})$
+    % \State $\Mt{U} \gets \M{U}$
+    \State $\Mt{C} \gets \M{I}_r$
+    \State $\Mt{V} \gets \M{V}$
+    \State $\Mt{D} \gets \M{I}_r$
+    \For{$k \gets 1 \ldots K$}
+    \If {$\eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q} \neq \0$}
+    \State
+    \begin{math}
+    \ve{q} \gets
+    \frac{\eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q}}
+    {\| \eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q}\|}
+    \end{math}
+    \Else
+    \State $\ve{q} \gets \0$
+    \EndIf
+    \State
+    \begin{math}
+      \M{K}
+      \gets
+      \begin{bmatrix}
+        \M{S} & \0
+        \\
+        \0^\T & 0
+      \end{bmatrix}
+      \left(
+        \M{I}
+        -
+        \begin{bmatrix}
+          \M{V}^\T \eve{j_k}{q}
+          \\
+          0
+        \end{bmatrix}
+        \begin{bmatrix}
+          \M{V}^\T \eve{j_k}{q}
+          \\
+          \sqrt{1 - \| \M{V}^\T \eve{j_k}{q} \|^2}
+        \end{bmatrix}^\T \right).
+    \end{math}
+    \State
+    $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
+    \If {$\ve{q} \neq \0$}
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \Mt{C}  \M{C}^{1:r, 1:r}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{V} \gets [\Mt{V}, \ve{q}]
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{D}
+      \gets
+      \begin{bmatrix}
+        \Mt{D} & \0
+        \\
+        \0^\T & 1
+      \end{bmatrix}
+      \M{D}
+    \end{math}
+    \Else
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \Mt{C}  \M{C}^{1:r, 1:(r-1)}
+    \end{math}
+    % \State
+    % \begin{math}
+    %   \Mt{V}
+    %   \gets
+    %   \delrow{\Mt{V}}{j_k}
+    % \end{math}
+    \State
+    \begin{math}
+      \Mt{D}
+      \gets
+      \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+    \end{math}
+    \EndIf
+    \State
+    \begin{math}
+      \M{V} \gets \Mt{V} \Mt{D}
+    \end{math}
+    \State
+    \begin{math}
+      \M{S} \gets \M{S}'
+    \end{math}
+    \State
+    \begin{math}
+      r \gets \textsc{NumberOfColumns/Rows}(\M{S})
+    \end{math}
+    \EndFor
+   \State
+    \begin{math}
+      \M{U} \gets \M{U} \Mt{C}
+    \end{math}
+     % \begin{math}
+    %   \M{U} \gets \Mt{U} \Mt{C}
+    % \end{math}
+    \State
+    \Return $(\M{U}, \M{S}, \M{V})$
+  \end{algorithmic}
+\end{algorithm}
+
+
+
+\subsection{Iterative downdating}
+\label{sec:iterative-downdating}
+
+Let $\M{X} \in \Mat{p}{q}$. If
+\begin{math}
+  K \in \Brackets{q-1},
+\end{math}
+\begin{math}
+  j_1 \in \Brackets{q},
+\end{math}
+\begin{math}
+  j_2 \in \Brackets{q - 1},
+\end{math}
+\dots,
+\begin{math}
+  j_K \in \Brackets{q - K + 1},
+\end{math}
+then one can consider the matrix
+\begin{displaymath}
+  \delcol{X}{j_1, \dots, j_K}
+  \colonequals
+  [ \dots [[\delcol{X}{j_1}] \varominus \mathrm{col}(j_2)]
+   \varominus \mathrm{col}(j_3)
+  \dots ]
+  \varominus \mathrm{col}(j_K).
+\end{displaymath}
+This matrix arises by first deleting the $j_1$th column from $\M{X}$, then deleting the $j_2$th column from the resulting $p \times (q-1)$ matrix, and, continuing in this way, finally deleting the $j_K$th column from the $p \times (q - K + 1)$ matrix obtained in the $(K-1)$th step. The SVD of
+\begin{math}
+  \delcol{X}{j_1, \dots, j_K}
+\end{math}
+can be obtained from the SVD of $\M{X}$ by computing successively the SVD of the intermediary matrices
+\begin{math}
+  \delcol{X}{j_1, \dots, j_k},
+\end{math}
+$k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47}, \eqref{eq:48}, \eqref{eq:49}, and \eqref{eq:50}.  The following algorithm describes the procedure.
+
+\begin{algorithm}[\textnormal{\textsc{ThinSVD}(\unboldmath$\delcol{X}{j_1,j_2, \dots, j_K}$)}]
+  \rule{\textwidth}{0.4pt}
+  \begin{algorithmic}[1]
+    \Require
+    \begin{math}
+      \M{X} \in \Mat{p}{q}, 
+    \end{math}
+    \begin{math}
+      K \in \Brackets{q - 1},
+    \end{math}
+    \begin{math}
+      j_1 \in \Brackets{q},
+    \end{math}
+    \begin{math}
+      j_2 \in \Brackets{q - 1},
+    \end{math}
+    \dots,
+    \begin{math}
+      j_K \in \Brackets{q - K + 1}
+    \end{math}
+    \State $(\M{U}, \M{S}, \M{V}) \gets \textsc{ThinSVD}(\M{X})$
+    \State $r \gets \textsc{NumberOfColumns/Rows}(\M{S})$
+    %\State $\Mt{U} \gets \M{U}$
+    \State $\Mt{C} \gets \M{I}_r$
+    \State $\Mt{V} \gets \M{V}$
+    \State $\Mt{D} \gets \M{I}_r$
+    \For{$k \gets 1 \ldots K$}
+    \If {$\eve{j_k}{q-k+1} - \M{V} \M{V}^\T \eve{j_k}{q-k+1} \neq \0$}
+    \State
+    \begin{math}
+    \ve{q} \gets
+    \frac{\eve{j_k}{q-k+1} - \M{V} \M{V}^\T \eve{j_k}{q-k+1}}
+    {\| \eve{j_k}{q-k+1} - \M{V} \M{V}^\T \eve{j_k}{q-k+1}\|}
+    \end{math}
+    \Else
+    \State $\ve{q} \gets \0$
+    \EndIf
+    \State
+    \begin{math}
+      \M{K}
+      \gets
+      \begin{bmatrix}
+        \M{S} & \0
+        \\
+        \0^\T & 0
+      \end{bmatrix}
+      \left(
+        \M{I}
+        -
+        \begin{bmatrix}
+          \M{V}^\T \eve{j_k}{q-k+1}
+          \\
+          0
+        \end{bmatrix}
+        \begin{bmatrix}
+          \M{V}^\T \eve{j_k}{q-k+1}
+          \\
+          \sqrt{1 - \| \M{V}^\T \eve{j_k}{q-k+1} \|^2}
+        \end{bmatrix}^\T \right).
+    \end{math}
+    \State
+    $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
+    \If {$\ve{q} \neq \0$}
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \Mt{C}  \M{C}^{1:r, 1:r}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{V} \gets \delrow{[\Mt{V}, \ve{q}]}{j_k}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{D}
+      \gets
+      \begin{bmatrix}
+        \Mt{D} & \0
+        \\
+        \0^\T & 1
+      \end{bmatrix}
+      \M{D}
+    \end{math}
+    \Else
+    \State
+    \begin{math}
+      \Mt{C}
+      \gets
+      \Mt{C}  \M{C}^{1:r, 1:(r-1)}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{V}
+      \gets
+      \delrow{\Mt{V}}{j_k}
+    \end{math}
+    \State
+    \begin{math}
+      \Mt{D}
+      \gets
+      \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+    \end{math}
+    \EndIf
+    \State
+    \begin{math}
+      \M{V} \gets \Mt{V} \Mt{D}
+    \end{math}
+    \State
+    \begin{math}
+      \M{S} \gets \M{S}'
+    \end{math}
+    \State
+    \begin{math}
+      r \gets \textsc{NumberOfColumns/Rows}(\M{S})
+    \end{math}
+    \EndFor
+   \State
+    \begin{math}
+      \M{U} \gets \M{U} \Mt{C}
+    \end{math}
+    % \begin{math}
+    %   \M{U} \gets \Mt{U} \Mt{C}
+    % \end{math}
+    \State
+    \Return $(\M{U}, \M{S}, \M{V})$
+  \end{algorithmic}
+\end{algorithm}
+
+% \begin{algorithm}[\textnormal{\textsc{ThinSVD}(\unboldmath$\zercol{X}{j_1,j_2, \dots, j_K}$)}]
+%   \rule{\textwidth}{0.4pt}
+%   \begin{algorithmic}[1]
+%     \Require
+%     \begin{math}
+%       \M{X} \in \Mat{p}{q}, 
+%     \end{math}
+%     \begin{math}
+%       K \in \Brackets{q - 1},
+%     \end{math}
+%     \begin{math}
+%       j_1 \in \Brackets{q},
+%     \end{math}
+%     \begin{math}
+%       j_2 \in \Brackets{q} \setminus \{j_1\},
+%     \end{math}
+%     \dots,
+%     \begin{math}
+%       j_K \in \Brackets{q} \setminus \{j_1, \dots, j_{K-1}\},
+%     \end{math}
+%     \State $(\M{U}, \M{S}, \M{V}) \gets \textsc{ThinSVD}(\M{X})$
+%     \State $r \gets \textsc{Order}(\M{S})$
+%     % \State $\Mt{U} \gets \M{U}$
+%     \State $\Mt{C} \gets \M{I}_r$
+%     \State $\Mt{V} \gets \M{V}$
+%     \State $\Mt{D} \gets \M{I}_r$
+%     \For{$k \gets 1 \ldots K$}
+%     \If {$\eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q} \neq \0$}
+%     \State
+%     \begin{math}
+%     \ve{q} \gets
+%     \frac{\eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q}}
+%     {\| \eve{j_k}{q} - \M{V} \M{V}^\T \eve{j_k}{q}\|}
+%     \end{math}
+%     \Else
+%     \State $\ve{q} \gets \0$
+%     \EndIf
+%     \State
+%     \begin{math}
+%       \M{K}
+%       \gets
+%       \begin{bmatrix}
+%         \M{S} & \0
+%         \\
+%         \0^\T & 0
+%       \end{bmatrix}
+%       \left(
+%         \M{I}
+%         -
+%         \begin{bmatrix}
+%           \M{V}^\T \eve{j_k}{q}
+%           \\
+%           0
+%         \end{bmatrix}
+%         \begin{bmatrix}
+%           \M{V}^\T \eve{j_k}{q}
+%           \\
+%           \sqrt{1 - \| \M{V}^\T \eve{j_k}{q} \|^2}
+%         \end{bmatrix}^\T \right).
+%     \end{math}
+%     \State
+%     $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
+%     \If {$\ve{q} \neq \0$}
+%     \State
+%     \begin{math}
+%       \Mt{C}
+%       \gets
+%       \Mt{C}  \M{C}^{1:r, 1:r}
+%     \end{math}
+%     \State
+%     \begin{math}
+%       \Mt{V} \gets [\Mt{V}, \ve{q}]
+%     \end{math}
+%     \State
+%     \begin{math}
+%       \Mt{D}
+%       \gets
+%       \begin{bmatrix}
+%         \Mt{D} & \0
+%         \\
+%         \0^\T & 1
+%       \end{bmatrix}
+%       \M{D}
+%     \end{math}
+%     \Else
+%     \State
+%     \begin{math}
+%       \Mt{C}
+%       \gets
+%       \Mt{C}  \M{C}^{1:r, 1:(r-1)}
+%     \end{math}
+%     % \State
+%     % \begin{math}
+%     %   \Mt{V}
+%     %   \gets
+%     %   \delrow{\Mt{V}}{j_k}
+%     % \end{math}
+%     \State
+%     \begin{math}
+%       \Mt{D}
+%       \gets
+%       \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+%     \end{math}
+%     \EndIf
+%     \State
+%     \begin{math}
+%       \M{V} \gets \Mt{V} \Mt{D}
+%     \end{math}
+%     \State
+%     \begin{math}
+%       \M{S} \gets \M{S}'
+%     \end{math}
+%     \State
+%     \begin{math}
+%       r \gets \textsc{Order}(\M{S})
+%     \end{math}
+%     \EndFor
+%    \State
+%     \begin{math}
+%       \M{U} \gets \M{U} \Mt{C}
+%     \end{math}
+%      % \begin{math}
+%     %   \M{U} \gets \Mt{U} \Mt{C}
+%     % \end{math}
+%     \State
+%     \Return $(\M{U}, \M{S}, \M{V})$
+%   \end{algorithmic}
+% \end{algorithm}
+
+\begin{comment}
+
+\subsection{Downdating}
 
 Let $\M{X}_0$ be a $p \times q$ matrix, and let
 \begin{displaymath}
@@ -2158,6 +3759,8 @@ We consider two cases.
 %     \end{bmatrix}.
 % \end{align*}
 
+\end{comment}
+
 \begin{comment}
 
 \begin{displaymath}
@@ -2323,7 +3926,11 @@ Then
 
 \end{comment}
 
-\bibliographystyle{unsrtnat} \bibliography{references.bib}
+\afterpage{\FloatBarrier}    
+
+\bibliographystyle{mn}
+% \bibliographystyle{unsrtnat}
+\bibliography{references.bib}
 
 \end{document}
 
