@@ -962,7 +962,7 @@ where $\Mt{U}' \in \Mat{p}{k}$ and $\Mt{C}' \in \Mat{k}{k}$, and
   \label{eq:16}
   \M{V}' = \Mt{V}' \Mt{D}', 
 \end{equation}
-where $\Mt{V}' \in \Mat{q}{k}$ and $\Mt{D}' \in \Mat{k}{k}$.  The explicit formulae for $\Mt{U}'$, $\Mt{C}'$, $\Mt{V}'$, and $\Mt{D}'$, which we shall derive next, are intended to be used iteratively to obtain an expression for the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix. In this target scenario, the matrices $\M{U}$ and $\M{V}$ corresponding to the initial matrix are represented as $\M{U} = \Mt{U} \Mt{C}$ and $\M{V} = \Mt{V} \Mt{D}$, where $\Mt{U} = \M{U}$, $\Mt{C} = \M{I}_r$, $\Mt{V} = \M{V}$, and $\Mt{D} = \M{I}_r$.
+where $\Mt{V}' \in \Mat{q}{k}$ and $\Mt{D}' \in \Mat{k}{k}$.  The explicit formulae for $\Mt{U}'$, $\Mt{C}'$, $\Mt{V}'$, and $\Mt{D}'$, which we shall derive next, are intended to be used iteratively to obtain an expression for the thin SVD of a matrix formed by adding in succession a number of columns to a given matrix. In this target scenario, the matrices $\M{U}$ and $\M{V}$ corresponding to the initial matrices are represented as $\M{U} = \Mt{U} \Mt{C}$ and $\M{V} = \Mt{V} \Mt{D}$, where $\Mt{U} = \M{U}$, $\Mt{C} = \M{I}_r$, $\Mt{V} = \M{V}$, and $\Mt{D} = \M{I}_r$.
 
 \subsubsection{A formula for $\M{U}'$}
 
@@ -1209,8 +1209,8 @@ We consider two cases.
     \begin{bmatrix}
       \Mt{V}
       \\
-      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+.
-    \end{bmatrix}
+      \M{D}^{r+1, 1:r} \left(\Mt{D} \M{D}^{1:r,1:r} \right)^+
+    \end{bmatrix}.
   \end{displaymath}
   Here, for a given matrix $\M{A}$, we use $\M{A}^+$ to denote the pseudo-inverse (or Moore--Penrose inverse) of $\M{A}$.
 \end{enumerate}
@@ -3121,7 +3121,7 @@ $k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47
           \M{V}^\T \eve{j_k}{q}
           \\
           \sqrt{1 - \| \M{V}^\T \eve{j_k}{q} \|^2}
-        \end{bmatrix}^\T \right).
+        \end{bmatrix}^\T \right)
     \end{math}
     \State
     $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
@@ -3164,7 +3164,7 @@ $k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47
     \begin{math}
       \Mt{D}
       \gets
-      \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+      \Mt{D} \M{D}^{1:r, 1:(r-1)}
     \end{math}
     \EndIf
     \State
@@ -3288,7 +3288,7 @@ $k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47
           \M{V}^\T \eve{j_k}{q-k+1}
           \\
           \sqrt{1 - \| \M{V}^\T \eve{j_k}{q-k+1} \|^2}
-        \end{bmatrix}^\T \right).
+        \end{bmatrix}^\T \right)
     \end{math}
     \State
     $(\M{C}, \M{S}', \M{D}) \gets \textsc{ThinSVD}(\M{K})$
@@ -3331,7 +3331,7 @@ $k \in \Brackets{K-1}$.  The process involves the repetitive use of \eqref{eq:47
     \begin{math}
       \Mt{D}
       \gets
-      \Mt{D} \M{D}^{1:r, 1:(r-1)}.
+      \Mt{D} \M{D}^{1:r, 1:(r-1)}
     \end{math}
     \EndIf
     \State
